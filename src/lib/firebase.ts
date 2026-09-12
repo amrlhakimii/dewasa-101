@@ -5,15 +5,17 @@ import { getFirestore } from 'firebase/firestore';
 
 // Firebase web config is not a secret — it identifies the project, it does
 // not authorize access. Security is enforced by Firestore/Auth rules and the
-// Authorized domains list, not by hiding these values.
+// Authorized domains list, not by hiding these values. It's pulled from env
+// vars anyway for cleanliness and to keep secret scanners quiet — see
+// .env.example.
 const firebaseConfig = {
-  apiKey: 'AIzaSyCvqkxK6VLpIe6W05ujJdJi2HBKYHFPbGc',
-  authDomain: 'dewasa-db1c4.firebaseapp.com',
-  projectId: 'dewasa-db1c4',
-  storageBucket: 'dewasa-db1c4.firebasestorage.app',
-  messagingSenderId: '558341510725',
-  appId: '1:558341510725:web:7197fecf29f48a8c64752c',
-  measurementId: 'G-6NPMYDYXVV',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 export const app = initializeApp(firebaseConfig);
