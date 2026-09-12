@@ -85,4 +85,46 @@ export const DATA_SOURCES = {
   ZAKAT_PENDAPATAN: 'https://www.zakatselangor.com.my/zakat-pendapatan-2/',
   ZAKAT_FITRAH: 'https://www.muftiselangor.gov.my/',
   KWSP: 'https://www.kwsp.gov.my/',
+  ROAD_TAX: 'https://roadtaxguru.com/price-list/',
+  MYTAX: 'https://mytax.hasil.gov.my/',
+  CCRIS: 'https://www.bnm.gov.my/ccris',
+  CTOS: 'https://www.ctoscredit.com.my/',
 } as const;
+
+export interface RoadTaxBracket {
+  maxCc: number; // Infinity for the open-ended top bracket
+  baseRate: number;
+  perCcAboveRate: number; // 0 for flat brackets
+  aboveCc: number; // the cc floor the per-cc rate applies above
+}
+
+// JPJ road tax schedule, Peninsular Malaysia, private-registered saloon cars.
+// East Malaysia / Langkawi / Pangkor / Labuan rates are lower — treat this as
+// an estimate, not the final JPJ figure. See DATA_SOURCES.ROAD_TAX.
+export const CAR_ROAD_TAX_BRACKETS: RoadTaxBracket[] = [
+  { maxCc: 1000, baseRate: 20, perCcAboveRate: 0, aboveCc: 0 },
+  { maxCc: 1200, baseRate: 55, perCcAboveRate: 0, aboveCc: 0 },
+  { maxCc: 1400, baseRate: 70, perCcAboveRate: 0, aboveCc: 0 },
+  { maxCc: 1600, baseRate: 90, perCcAboveRate: 0, aboveCc: 0 },
+  { maxCc: 1800, baseRate: 200, perCcAboveRate: 0.4, aboveCc: 1600 },
+  { maxCc: 2000, baseRate: 280, perCcAboveRate: 0.5, aboveCc: 1800 },
+  { maxCc: 2500, baseRate: 380, perCcAboveRate: 1.0, aboveCc: 2000 },
+  { maxCc: 3000, baseRate: 880, perCcAboveRate: 2.5, aboveCc: 2500 },
+  { maxCc: Infinity, baseRate: 2130, perCcAboveRate: 4.5, aboveCc: 3000 },
+];
+
+// JPJ road tax schedule, Peninsular Malaysia, private motorcycles (flat per
+// bracket, no progressive component). East Malaysia is generally cheaper.
+export const MOTORCYCLE_ROAD_TAX_BRACKETS: { maxCc: number; rate: number }[] = [
+  { maxCc: 150, rate: 2 },
+  { maxCc: 200, rate: 30 },
+  { maxCc: 250, rate: 50 },
+  { maxCc: 500, rate: 100 },
+  { maxCc: 800, rate: 250 },
+  { maxCc: Infinity, rate: 350 },
+];
+
+// Comprehensive car insurance in Malaysia is market-priced (varies by
+// insurer, NCD, sum insured) — this is a rough rule-of-thumb range, not an
+// official rate, used only to suggest a starting estimate.
+export const INSURANCE_ESTIMATE_RATE_OF_VALUE = { min: 0.03, max: 0.05 } as const;

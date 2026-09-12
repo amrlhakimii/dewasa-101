@@ -5,15 +5,18 @@ import { SignInPage } from '@/features/auth/components/SignInPage';
 import { DebtInputForm } from '@/features/debt-dsr/components/DebtInputForm';
 import { DsrGaugeometer } from '@/features/debt-dsr/components/DsrGaugeometer';
 import { GoalSimulator } from '@/features/goal-planner/components/GoalSimulator';
+import { PanduanPage } from '@/features/guide/components/PanduanPage';
 import { RentVsBuySimulator } from '@/features/living-costs/components/RentVsBuySimulator';
 import { DeductionsBreakdownCard } from '@/features/net-salary/components/DeductionsBreakdownCard';
 import { SalaryInputForm } from '@/features/net-salary/components/SalaryInputForm';
 import { OverviewPage } from '@/features/overview/components/OverviewPage';
 import { RetirementProjection } from '@/features/retirement/components/RetirementProjection';
 import { TaxBreakdownCard } from '@/features/tax/components/TaxBreakdownCard';
+import { TaxFilingGuide } from '@/features/tax/components/TaxFilingGuide';
 import { TaxReliefChecklist } from '@/features/tax/components/TaxReliefChecklist';
 import { ZakatBreakdownCard } from '@/features/zakat/components/ZakatBreakdownCard';
 import { ZakatInputForm } from '@/features/zakat/components/ZakatInputForm';
+import { ZakatPaymentGuide } from '@/features/zakat/components/ZakatPaymentGuide';
 import logo from '@/assets/logo-source.png';
 import { logEvent } from '@/lib/firebase';
 import { useAuth } from '@/lib/useAuth';
@@ -53,6 +56,7 @@ function App() {
           <TabsTrigger value="tax">Cukai</TabsTrigger>
           <TabsTrigger value="zakat">Zakat</TabsTrigger>
           <TabsTrigger value="retirement">KWSP</TabsTrigger>
+          <TabsTrigger value="guide">Panduan</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -83,20 +87,30 @@ function App() {
 
         <TabsContent value="tax">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <TaxReliefChecklist />
+            <div className="flex flex-col gap-5">
+              <TaxReliefChecklist />
+              <TaxFilingGuide />
+            </div>
             <TaxBreakdownCard />
           </div>
         </TabsContent>
 
         <TabsContent value="zakat">
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <ZakatInputForm />
+            <div className="flex flex-col gap-5">
+              <ZakatInputForm />
+              <ZakatPaymentGuide />
+            </div>
             <ZakatBreakdownCard />
           </div>
         </TabsContent>
 
         <TabsContent value="retirement">
           <RetirementProjection />
+        </TabsContent>
+
+        <TabsContent value="guide">
+          <PanduanPage />
         </TabsContent>
       </Tabs>
     </DashboardLayout>

@@ -1,4 +1,9 @@
-import { calculateMonthlyInstalment, roundTo2 } from '@/utils/math';
+import {
+  CAR_ROAD_TAX_BRACKETS,
+  INSURANCE_ESTIMATE_RATE_OF_VALUE,
+  MOTORCYCLE_ROAD_TAX_BRACKETS,
+} from '@/config/statutory';
+import { calculateMaxPrincipalForInstalment, calculateMonthlyInstalment, roundTo2 } from '@/utils/math';
 
 export type ScenarioKind = 'car' | 'room' | 'custom';
 
@@ -82,4 +87,63 @@ export function resolveScenario(input: ScenarioInput): ScenarioResult {
 
 export function getTotalScenarioMonthly(scenarios: Scenario[]): number {
   return roundTo2(scenarios.reduce((total, s) => total + resolveScenario(s.input).monthlyAmount, 0));
+}
+
+export interface CarAffordabilitySuggestion {
+  /** Rule of thumb: net annual salary as a straightforward price ceiling. */
+  priceByAnnualSalary: number;
+  /** Max price the instalment (incl. interest, at the given rate/tenure/down
+   * payment) can stay within budgetPercent of net monthly income. */
+  priceByInstalmentBudget: number;
+  maxMonthlyInstalment: number;
+}
+
+/** Two independent affordability checks for a car purchase:
+ * 1) price shouldn't exceed ~1x net annual salary (simple rule of thumb)
+ * 2) the loan instalment itself (including interest) shouldn't exceed
+ *    budgetPercent of net monthly income — the stricter, more realistic check
+ *    since it accounts for the actual rate/tenure/down payment chosen. */
+export function suggestCarAffordability(
+  netMonthlyIncome: number,
+  downPaymentPercent: number,
+  interestRatePercent: number,
+  tenureYears: number,
+  budgetPercent: number,
+): CarAffordabilitySuggestion {
+  const maxMonthlyInstalment = netMonthlyIncome * (budgetPercent / 100);
+  const maxPrincipal = calculateMaxPrincipalForInstalment(maxMonthlyInstalment, interestRatePercent / 100, tenureYears);
+  const priceByInstalmentBudget = downPaymentPercent >= 100 ? maxPrincipal : maxPrincipal / (1 - downPaymentPercent / 100);
+
+  return {
+    priceByAnnualSalary: roundTo2(netMonthlyIncome * 12),
+    priceByInstalmentBudget: roundTo2(Math.max(0, priceByInstalmentBudget)),
+    maxMonthlyInstalment: roundTo2(maxMonthlyInstalment),
+  };
+}
+
+export type VehicleKind = 'car' | 'motorcycle';
+
+/** Estimated annual JPJ road tax for a given engine capacity — indicative,
+ * Peninsular Malaysia private registration. See DATA_SOURCES.ROAD_TAX. */
+export function estimateRoadTax(vehicleKind: VehicleKind, cc: number): number {
+  const safeCc = Math.max(0, cc);
+
+  if (vehicleKind === 'motorcycle') {
+    const bracket = MOTORCYCLE_ROAD_TAX_BRACKETS.find((b) => safeCc <= b.maxCc);
+    return bracket ? bracket.rate : 0;
+  }
+
+  const bracket = CAR_ROAD_TAX_BRACKETS.find((b) => safeCc <= b.maxCc);
+  if (!bracket) return 0;
+  const excess = Math.max(0, safeCc - bracket.aboveCc);
+  return roundTo2(bracket.baseRate + excess * bracket.perCcAboveRate);
+}
+
+/** Rough starting estimate for annual comprehensive insurance — a percentage
+ * of the car's price. Real premiums vary by insurer, NCD, and coverage. */
+export function estimateAnnualInsurance(carPrice: number): { low: number; high: number } {
+  return {
+    low: roundTo2(carPrice * INSURANCE_ESTIMATE_RATE_OF_VALUE.min),
+    high: roundTo2(carPrice * INSURANCE_ESTIMATE_RATE_OF_VALUE.max),
+  };
 }

@@ -1,6 +1,7 @@
 import {
   Banknote,
   Car,
+  GraduationCap,
   Home,
   Landmark,
   PiggyBank,
@@ -32,6 +33,7 @@ const QUICK_ACTIONS: { question: string; tab: string; icon: typeof Car }[] = [
   { question: 'Nak kira cukai?', tab: 'tax', icon: Landmark },
   { question: 'Nak tengok KWSP?', tab: 'retirement', icon: PiggyBank },
   { question: 'Nak semak hutang?', tab: 'commitments', icon: Scale },
+  { question: 'Nak belajar asas kewangan?', tab: 'guide', icon: GraduationCap },
 ];
 
 export function OverviewPage({ onNavigate }: OverviewPageProps) {

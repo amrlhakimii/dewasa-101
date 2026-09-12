@@ -22,3 +22,16 @@ export function calculateMonthlyInstalment(
   const factor = (monthlyRate * (1 + monthlyRate) ** numPayments) / ((1 + monthlyRate) ** numPayments - 1);
   return principal * factor;
 }
+
+/** Inverse of calculateMonthlyInstalment — the max principal a given fixed
+ * monthly instalment can service (present value of an annuity). */
+export function calculateMaxPrincipalForInstalment(
+  monthlyInstalment: number,
+  annualInterestRate: number,
+  tenureYears: number,
+): number {
+  const monthlyRate = annualInterestRate / 12;
+  const numPayments = tenureYears * 12;
+  if (monthlyRate === 0) return monthlyInstalment * numPayments;
+  return (monthlyInstalment * (1 - (1 + monthlyRate) ** -numPayments)) / monthlyRate;
+}

@@ -1,12 +1,23 @@
-import { Car, Home, Sparkles, Trash2 } from 'lucide-react';
+import { Bike, Car, Home, Sparkles, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input, Label } from '@/components/ui/input';
 import { NumberField } from '@/components/ui/number-field';
+import { SourceNote } from '@/components/ui/source-note';
+import { DATA_SOURCES } from '@/config/statutory';
 import { calculateDSR, getDSRRiskLevel } from '@/features/debt-dsr/logic';
-import { getTotalScenarioMonthly, resolveScenario, type Scenario, type ScenarioKind } from '@/features/goal-planner/logic';
+import {
+  estimateAnnualInsurance,
+  estimateRoadTax,
+  getTotalScenarioMonthly,
+  resolveScenario,
+  suggestCarAffordability,
+  type Scenario,
+  type ScenarioKind,
+  type VehicleKind,
+} from '@/features/goal-planner/logic';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
 import { cn } from '@/lib/utils';
 import { formatCurrency, formatPercent, formatRiskLevel } from '@/utils/formatters';
@@ -41,6 +52,21 @@ export function GoalSimulator() {
   const [monthlyMaintenance, setMonthlyMaintenance] = useState(120);
   const [monthlyRent, setMonthlyRent] = useState(800);
   const [customAmount, setCustomAmount] = useState(200);
+
+  const [budgetPercent, setBudgetPercent] = useState<20 | 30>(30);
+  const [vehicleKind, setVehicleKind] = useState<VehicleKind>('car');
+  const [roadTaxCc, setRoadTaxCc] = useState(1500);
+
+  const affordability = suggestCarAffordability(
+    netMonthlyIncome,
+    downPaymentPercent,
+    interestRatePercent,
+    tenureYears,
+    budgetPercent,
+  );
+  const roadTaxEstimate = estimateRoadTax(vehicleKind, roadTaxCc);
+  const insuranceEstimate = estimateAnnualInsurance(price);
+  const insuranceMid = Math.round((insuranceEstimate.low + insuranceEstimate.high) / 2);
 
   function addScenario() {
     const id = String(nextId++);
@@ -115,6 +141,55 @@ export function GoalSimulator() {
           })}
         </div>
 
+        {kind === 'car' && (
+          <div className="rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold text-text-h">Berapa harga kereta patut saya beli?</p>
+              <div className="flex gap-1 rounded-full bg-surface-muted p-0.5">
+                {([20, 30] as const).map((pct) => (
+                  <button
+                    key={pct}
+                    type="button"
+                    onClick={() => setBudgetPercent(pct)}
+                    className={cn(
+                      'rounded-full px-2.5 py-1 text-xs font-semibold transition-all',
+                      budgetPercent === pct ? 'bg-brand-600 text-white' : 'text-text hover:text-text-h',
+                    )}
+                  >
+                    {pct}%
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="rounded-xl bg-surface-muted px-3 py-2">
+                <p className="text-xs text-text">Aturan mudah: 1x gaji bersih setahun</p>
+                <p className="text-lg font-bold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
+              </div>
+              <div className="rounded-xl bg-surface-muted px-3 py-2">
+                <p className="text-xs text-text">
+                  Ikut had ansuran {budgetPercent}% gaji (termasuk faedah, {interestRatePercent}%/{tenureYears}thn)
+                </p>
+                <p className="text-lg font-bold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
+              </div>
+            </div>
+            <p className="mt-2 text-xs text-text">
+              Had ansuran bulanan pada {budgetPercent}%: {formatCurrency(affordability.maxMonthlyInstalment)}/bln
+            </p>
+
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="mt-3"
+              onClick={() => setPrice(Math.round(affordability.priceByInstalmentBudget))}
+            >
+              Guna cadangan {budgetPercent}%
+            </Button>
+          </div>
+        )}
+
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="scenarioLabel">Nama (pilihan)</Label>
           <Input
@@ -148,9 +223,62 @@ export function GoalSimulator() {
               <p className="label-eyebrow">Kos operasi</p>
             </div>
 
+            <div className="col-span-2 flex flex-col gap-2 rounded-xl bg-surface-muted p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-text">Anggaran cukai jalan (JPJ)</span>
+                <div className="flex gap-1 rounded-full bg-surface p-0.5">
+                  {(
+                    [
+                      { value: 'car' as const, icon: Car },
+                      { value: 'motorcycle' as const, icon: Bike },
+                    ]
+                  ).map(({ value, icon: Icon }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setVehicleKind(value)}
+                      className={cn(
+                        'flex h-6 w-6 items-center justify-center rounded-full',
+                        vehicleKind === value ? 'bg-brand-600 text-white' : 'text-text',
+                      )}
+                    >
+                      <Icon size={13} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Label htmlFor="roadTaxCc">Kapasiti enjin (cc)</Label>
+                  <NumberField id="roadTaxCc" value={roadTaxCc} onValueChange={setRoadTaxCc} />
+                </div>
+                <p className="pb-2.5 text-sm text-text-h">≈ {formatCurrency(roadTaxEstimate)}/thn</p>
+              </div>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setAnnualRoadTax(roadTaxEstimate)}>
+                Guna anggaran ini
+              </Button>
+              <SourceNote label="Jadual Cukai Jalan JPJ" href={DATA_SOURCES.ROAD_TAX} />
+            </div>
+
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="carInsurance">Insurans (RM/tahun)</Label>
               <NumberField id="carInsurance" value={annualInsurance} onValueChange={setAnnualInsurance} />
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-text">
+                  Anggaran: {formatCurrency(insuranceEstimate.low)}–{formatCurrency(insuranceEstimate.high)}/thn
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setAnnualInsurance(insuranceMid)}
+                  className="text-xs font-semibold text-brand-300 hover:underline"
+                >
+                  Guna anggaran
+                </button>
+              </div>
+              <p className="text-xs text-text">
+                Kadar komprehensif biasanya 3%–5% nilai kereta setahun — bergantung insurer, NCD &amp; jenis
+                perlindungan.
+              </p>
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="carRoadTax">Cukai jalan (RM/tahun)</Label>
