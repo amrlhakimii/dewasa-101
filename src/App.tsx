@@ -11,16 +11,32 @@ import { OverviewPage } from '@/features/overview/components/OverviewPage';
 import { TaxReliefChecklist } from '@/features/tax-zakat/components/TaxReliefChecklist';
 import { ZakatInputForm } from '@/features/tax-zakat/components/ZakatInputForm';
 import { ZakatRebateVisualizer } from '@/features/tax-zakat/components/ZakatRebateVisualizer';
+import { SignInPage } from '@/features/auth/components/SignInPage';
 import { logEvent } from '@/lib/firebase';
+import { useAuth } from '@/lib/useAuth';
 import { useFirestoreSync } from '@/lib/useFirestoreSync';
+import logo from '@/assets/logo-source.png';
 
 function App() {
   const [tab, setTab] = useState('overview');
+  const { user, loading } = useAuth();
   useFirestoreSync();
 
   function handleTabChange(next: string) {
     setTab(next);
     logEvent('tab_change', { tab: next });
+  }
+
+  if (loading) {
+    return (
+      <div className="app-bg flex min-h-svh items-center justify-center">
+        <img src={logo} alt="" className="h-14 w-14 animate-pulse rounded-2xl shadow-glow" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <SignInPage />;
   }
 
   return (

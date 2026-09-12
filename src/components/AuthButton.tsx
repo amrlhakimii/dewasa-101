@@ -1,24 +1,21 @@
 import { LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/useAuth';
 
+// Only ever rendered inside the authenticated dashboard (App.tsx gates on
+// `user` before showing DashboardLayout at all), so `user` is always set here.
 export function AuthButton() {
-  const { user, loading, signInWithGoogle, signOutUser } = useAuth();
-
-  if (loading) return null;
-
-  if (!user) {
-    return (
-      <Button variant="secondary" size="sm" onClick={() => signInWithGoogle()}>
-        Sign in with Google
-      </Button>
-    );
-  }
+  const { user, signOutUser } = useAuth();
+  if (!user) return null;
 
   return (
     <div className="flex items-center gap-2">
       {user.photoURL && (
-        <img src={user.photoURL} alt={user.displayName ?? 'Account'} className="h-7 w-7 rounded-full" referrerPolicy="no-referrer" />
+        <img
+          src={user.photoURL}
+          alt={user.displayName ?? 'Account'}
+          className="h-7 w-7 rounded-full"
+          referrerPolicy="no-referrer"
+        />
       )}
       <span className="hidden text-sm font-medium text-text-h sm:inline">{user.displayName?.split(' ')[0]}</span>
       <button

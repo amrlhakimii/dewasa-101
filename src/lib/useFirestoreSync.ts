@@ -6,14 +6,17 @@ import { getPersistedState, useFinanceStore, type PersistedFinanceState } from '
 
 const SAVE_DEBOUNCE_MS = 800;
 
-/** Loads a signed-in user's saved financial profile once, then keeps
- * Firestore in sync with every subsequent local change (debounced).
- * Signed-out users get no persistence — local state only, lost on refresh. */
+/** Keeps the finance store scoped to exactly the signed-in user's own
+ * Firestore document — nothing else. Every auth change (sign in, sign out,
+ * switching accounts) resets the store first, so a new session can never
+ * briefly show a previous user's data before its own doc loads. */
 export function useFirestoreSync() {
   const { user } = useAuth();
   const hydrate = useFinanceStore((s) => s.hydrate);
+  const reset = useFinanceStore((s) => s.reset);
 
   useEffect(() => {
+    reset();
     if (!user) return;
 
     let cancelled = false;
@@ -43,5 +46,5 @@ export function useFirestoreSync() {
       cancelled = true;
       unsubscribeStore?.();
     };
-  }, [user, hydrate]);
+  }, [user, hydrate, reset]);
 }

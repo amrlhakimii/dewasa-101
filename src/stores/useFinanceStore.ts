@@ -17,26 +17,27 @@ export interface PersistedFinanceState {
   riceGrade: RiceGrade;
 }
 
-interface FinanceState {
-  // Income
-  grossSalary: number;
-  freelanceIncome: number;
-  taxableAllowances: number;
-  nonTaxableAllowances: number;
+const DEFAULT_STATE: PersistedFinanceState = {
+  grossSalary: 3500,
+  freelanceIncome: 0,
+  taxableAllowances: 0,
+  nonTaxableAllowances: 0,
+  monthlyDebts: {
+    carLoan: 0,
+    personalLoan: 0,
+    creditCardMinimum: 0,
+    ptptn: 0,
+    existingMortgage: 0,
+  },
+  claimedReliefIds: [],
+  zakatState: 'WP Kuala Lumpur',
+  zakatDependents: 0,
+  lowestSavingsBalance: 0,
+  paysZakatFitrah: false,
+  riceGrade: 'Standard',
+};
 
-  // Debts / commitments
-  monthlyDebts: DebtProfile;
-
-  // Tax reliefs
-  claimedReliefIds: string[];
-
-  // Zakat
-  zakatState: string;
-  zakatDependents: number;
-  lowestSavingsBalance: number;
-  paysZakatFitrah: boolean;
-  riceGrade: RiceGrade;
-
+interface FinanceState extends PersistedFinanceState {
   // Actions
   setGrossSalary: (amount: number) => void;
   setFreelanceIncome: (amount: number) => void;
@@ -50,29 +51,13 @@ interface FinanceState {
   setPaysZakatFitrah: (value: boolean) => void;
   setRiceGrade: (grade: RiceGrade) => void;
   hydrate: (data: PersistedFinanceState) => void;
+  /** Wipes the store back to defaults — used when switching/signing out of an
+   * account so a new session never inherits the previous user's data. */
+  reset: () => void;
 }
 
 export const useFinanceStore = create<FinanceState>((set) => ({
-  grossSalary: 3500,
-  freelanceIncome: 0,
-  taxableAllowances: 0,
-  nonTaxableAllowances: 0,
-
-  monthlyDebts: {
-    carLoan: 0,
-    personalLoan: 0,
-    creditCardMinimum: 0,
-    ptptn: 0,
-    existingMortgage: 0,
-  },
-
-  claimedReliefIds: [],
-
-  zakatState: 'WP Kuala Lumpur',
-  zakatDependents: 0,
-  lowestSavingsBalance: 0,
-  paysZakatFitrah: false,
-  riceGrade: 'Standard',
+  ...DEFAULT_STATE,
 
   setGrossSalary: (amount) => set({ grossSalary: Math.max(0, amount) }),
   setFreelanceIncome: (amount) => set({ freelanceIncome: Math.max(0, amount) }),
@@ -92,6 +77,7 @@ export const useFinanceStore = create<FinanceState>((set) => ({
   setPaysZakatFitrah: (value) => set({ paysZakatFitrah: value }),
   setRiceGrade: (riceGrade) => set({ riceGrade }),
   hydrate: (data) => set(data),
+  reset: () => set(DEFAULT_STATE),
 }));
 
 export function getPersistedState(state: FinanceState): PersistedFinanceState {
