@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { AuthButton } from '@/components/AuthButton';
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -16,6 +17,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               <p className="text-xs text-text">Financial reality checks for young Malaysians</p>
             </div>
           </div>
+          <AuthButton />
         </div>
       </header>
 

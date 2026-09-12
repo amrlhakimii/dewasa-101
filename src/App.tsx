@@ -11,13 +11,21 @@ import { OverviewPage } from '@/features/overview/components/OverviewPage';
 import { TaxReliefChecklist } from '@/features/tax-zakat/components/TaxReliefChecklist';
 import { ZakatInputForm } from '@/features/tax-zakat/components/ZakatInputForm';
 import { ZakatRebateVisualizer } from '@/features/tax-zakat/components/ZakatRebateVisualizer';
+import { logEvent } from '@/lib/firebase';
+import { useFirestoreSync } from '@/lib/useFirestoreSync';
 
 function App() {
   const [tab, setTab] = useState('overview');
+  useFirestoreSync();
+
+  function handleTabChange(next: string) {
+    setTab(next);
+    logEvent('tab_change', { tab: next });
+  }
 
   return (
     <DashboardLayout>
-      <Tabs value={tab} onValueChange={setTab}>
+      <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="income">Pendapatan</TabsTrigger>
@@ -26,7 +34,7 @@ function App() {
         </TabsList>
 
         <TabsContent value="overview">
-          <OverviewPage onNavigate={setTab} />
+          <OverviewPage onNavigate={handleTabChange} />
         </TabsContent>
 
         <TabsContent value="income">

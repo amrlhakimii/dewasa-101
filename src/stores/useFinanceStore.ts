@@ -1,6 +1,22 @@
 import { create } from 'zustand';
 import type { DebtProfile, RiceGrade } from '@/types/finance';
 
+// The subset of state that gets persisted to Firestore per signed-in user —
+// deliberately excludes actions (functions aren't serializable).
+export interface PersistedFinanceState {
+  grossSalary: number;
+  freelanceIncome: number;
+  taxableAllowances: number;
+  nonTaxableAllowances: number;
+  monthlyDebts: DebtProfile;
+  claimedReliefIds: string[];
+  zakatState: string;
+  zakatDependents: number;
+  lowestSavingsBalance: number;
+  paysZakatFitrah: boolean;
+  riceGrade: RiceGrade;
+}
+
 interface FinanceState {
   // Income
   grossSalary: number;
@@ -33,6 +49,7 @@ interface FinanceState {
   setLowestSavingsBalance: (amount: number) => void;
   setPaysZakatFitrah: (value: boolean) => void;
   setRiceGrade: (grade: RiceGrade) => void;
+  hydrate: (data: PersistedFinanceState) => void;
 }
 
 export const useFinanceStore = create<FinanceState>((set) => ({
@@ -74,4 +91,21 @@ export const useFinanceStore = create<FinanceState>((set) => ({
   setLowestSavingsBalance: (amount) => set({ lowestSavingsBalance: Math.max(0, amount) }),
   setPaysZakatFitrah: (value) => set({ paysZakatFitrah: value }),
   setRiceGrade: (riceGrade) => set({ riceGrade }),
+  hydrate: (data) => set(data),
 }));
+
+export function getPersistedState(state: FinanceState): PersistedFinanceState {
+  return {
+    grossSalary: state.grossSalary,
+    freelanceIncome: state.freelanceIncome,
+    taxableAllowances: state.taxableAllowances,
+    nonTaxableAllowances: state.nonTaxableAllowances,
+    monthlyDebts: state.monthlyDebts,
+    claimedReliefIds: state.claimedReliefIds,
+    zakatState: state.zakatState,
+    zakatDependents: state.zakatDependents,
+    lowestSavingsBalance: state.lowestSavingsBalance,
+    paysZakatFitrah: state.paysZakatFitrah,
+    riceGrade: state.riceGrade,
+  };
+}
