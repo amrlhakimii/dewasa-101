@@ -21,13 +21,16 @@ resource "aws_iam_role" "github_actions" {
         Principal = { Federated = aws_iam_openid_connect_provider.github.arn }
         Action    = "sts:AssumeRoleWithWebIdentity"
         Condition = {
+          # GitHub's `sub` claim now embeds immutable numeric owner/repo IDs
+          # (repo:owner@id/repo@id:ref:...), so this matches on the stable
+          # `repository` and `job_workflow_ref` claims instead. AWS also
+          # requires the trust policy be scoped via `sub` or
+          # `job_workflow_ref` specifically — it rejects a policy that only
+          # checks `aud`/`repository` as "not scoped to all".
           StringEquals = {
-            "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-          }
-          # Scoped to this exact repo, any branch/tag/PR — tighten to
-          # "repo:${var.github_repo}:ref:refs/heads/main" if only main should deploy.
-          StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:*"
+            "token.actions.githubusercontent.com:aud"             = "sts.amazonaws.com"
+            "token.actions.githubusercontent.com:repository"      = var.github_repo
+            "token.actions.githubusercontent.com:job_workflow_ref" = "${var.github_repo}/.github/workflows/deploy.yml@refs/heads/main"
           }
         }
       }
