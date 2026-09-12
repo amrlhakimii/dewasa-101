@@ -1,0 +1,42 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write # required for OIDC — no AWS keys stored in GitHub at all
+  contents: read
+
+env:
+  AWS_REGION: ap-southeast-1
+  S3_BUCKET: dewasa-101-253807293419
+  CLOUDFRONT_DISTRIBUTION_ID: E1OTM0YYE1WEC1
+  AWS_ROLE_ARN: arn:aws:iam::253807293419:role/dewasa-101-github-actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync build to S3
+        run: aws s3 sync dist/ "s3://${S3_BUCKET}" --delete
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" --paths "/*"
