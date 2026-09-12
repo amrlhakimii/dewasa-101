@@ -14,9 +14,9 @@ export function PanduanPage() {
   const [essentialExpenses, setEssentialExpenses] = useState(0);
   const [currentSavings, setCurrentSavings] = useState(0);
 
-  const effectiveExpenses = essentialExpenses || totalMonthlyDebt;
   const budget = calculateBudgetSplit(netMonthlyIncome);
-  const emergencyFund = calculateEmergencyFundTarget(effectiveExpenses, currentSavings);
+  const emergencyFund = calculateEmergencyFundTarget(essentialExpenses, currentSavings);
+  const hasExpenses = essentialExpenses > 0;
 
   return (
     <div className="flex flex-col gap-5">
@@ -44,40 +44,77 @@ export function PanduanPage() {
           <CardContent className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="essentialExpenses">Perbelanjaan penting bulanan (RM)</Label>
+              <p className="text-xs text-text">
+                Tambah semua <strong className="text-text-h">keperluan asas</strong> yang WAJIB dibayar setiap
+                bulan walaupun anda kehilangan kerja esok:
+              </p>
+              <ul className="ml-4 list-disc text-xs text-text">
+                <li>Sewa / bayaran pinjaman rumah — cth RM800</li>
+                <li>Makan — cth RM600</li>
+                <li>Bil (elektrik, air, internet, telefon) — cth RM150</li>
+                <li>Minyak / pengangkutan — cth RM200</li>
+                <li>Bayaran hutang bulanan (dari halaman Komitmen)</li>
+              </ul>
+              <p className="text-xs text-text">
+                Contoh jumlah: RM800 + RM600 + RM150 + RM200 = <strong className="text-text-h">RM1,750</strong>.
+                Jangan masukkan kehendak (Netflix, shopping, makan luar).
+              </p>
               <NumberField
                 id="essentialExpenses"
                 value={essentialExpenses}
                 onValueChange={setEssentialExpenses}
-                placeholder={formatCurrency(totalMonthlyDebt)}
+                placeholder="Cth: 1750"
               />
+              {totalMonthlyDebt > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setEssentialExpenses(totalMonthlyDebt)}
+                  className="self-start text-xs font-semibold text-brand-300 hover:underline"
+                >
+                  Guna jumlah Komitmen sahaja ({formatCurrency(totalMonthlyDebt)})
+                </button>
+              )}
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="currentSavings">Simpanan kecemasan semasa (RM)</Label>
-              <NumberField id="currentSavings" value={currentSavings} onValueChange={setCurrentSavings} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-surface-muted px-3 py-2">
-                <p className="text-xs text-text">Sasaran minimum (3 bulan)</p>
-                <p className="text-lg font-bold text-text-h">{formatCurrency(emergencyFund.threeMonths)}</p>
-              </div>
-              <div className="rounded-xl bg-surface-muted px-3 py-2">
-                <p className="text-xs text-text">Sasaran selesa (6 bulan)</p>
-                <p className="text-lg font-bold text-text-h">{formatCurrency(emergencyFund.sixMonths)}</p>
-              </div>
-            </div>
-
-            <div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-surface-muted">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-700"
-                  style={{ width: `${emergencyFund.progressPercent}%` }}
-                />
-              </div>
-              <p className="mt-1.5 text-xs text-text">
-                {formatPercent(emergencyFund.progressPercent, 0)} ke arah sasaran 6 bulan
+              <p className="text-xs text-text">
+                Baki yang ada SEKARANG dalam akaun simpanan/tabung yang khas untuk kecemasan sahaja (bukan akaun
+                yang anda selalu belanja). Tiada simpanan lagi? Taip 0 — tidak mengapa, itulah sebabnya alat ini
+                wujud.
               </p>
+              <NumberField id="currentSavings" value={currentSavings} onValueChange={setCurrentSavings} placeholder="Cth: 2000" />
             </div>
+
+            {hasExpenses ? (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl bg-surface-muted px-3 py-2">
+                    <p className="text-xs text-text">Sasaran minimum (3 bulan)</p>
+                    <p className="text-lg font-bold text-text-h">{formatCurrency(emergencyFund.threeMonths)}</p>
+                  </div>
+                  <div className="rounded-xl bg-surface-muted px-3 py-2">
+                    <p className="text-xs text-text">Sasaran selesa (6 bulan)</p>
+                    <p className="text-lg font-bold text-text-h">{formatCurrency(emergencyFund.sixMonths)}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-surface-muted">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-700"
+                      style={{ width: `${emergencyFund.progressPercent}%` }}
+                    />
+                  </div>
+                  <p className="mt-1.5 text-xs text-text">
+                    {formatPercent(emergencyFund.progressPercent, 0)} ke arah sasaran 6 bulan
+                  </p>
+                </div>
+              </>
+            ) : (
+              <p className="rounded-xl border border-dashed border-border px-3 py-4 text-center text-sm text-text">
+                Isi perbelanjaan penting bulanan di atas untuk lihat sasaran dana kecemasan anda.
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>

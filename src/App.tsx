@@ -22,6 +22,18 @@ import { logEvent } from '@/lib/firebase';
 import { useAuth } from '@/lib/useAuth';
 import { useFirestoreSync } from '@/lib/useFirestoreSync';
 
+const TAB_ITEMS = [
+  { value: 'overview', label: 'Ringkasan' },
+  { value: 'income', label: 'Pendapatan' },
+  { value: 'commitments', label: 'Komitmen' },
+  { value: 'housing', label: 'Perumahan' },
+  { value: 'simulation', label: 'Simulasi' },
+  { value: 'tax', label: 'Cukai' },
+  { value: 'zakat', label: 'Zakat' },
+  { value: 'retirement', label: 'KWSP' },
+  { value: 'guide', label: 'Panduan' },
+] as const;
+
 function App() {
   const [tab, setTab] = useState('overview');
   const { user, loading } = useAuth();
@@ -47,16 +59,27 @@ function App() {
   return (
     <DashboardLayout>
       <Tabs value={tab} onValueChange={handleTabChange}>
-        <TabsList>
-          <TabsTrigger value="overview">Ringkasan</TabsTrigger>
-          <TabsTrigger value="income">Pendapatan</TabsTrigger>
-          <TabsTrigger value="commitments">Komitmen</TabsTrigger>
-          <TabsTrigger value="housing">Perumahan</TabsTrigger>
-          <TabsTrigger value="simulation">Simulasi</TabsTrigger>
-          <TabsTrigger value="tax">Cukai</TabsTrigger>
-          <TabsTrigger value="zakat">Zakat</TabsTrigger>
-          <TabsTrigger value="retirement">KWSP</TabsTrigger>
-          <TabsTrigger value="guide">Panduan</TabsTrigger>
+        {/* Small screens: a native dropdown, so every page stays reachable
+            with no hidden/clipped items — a horizontal-scroll pill row gives
+            no visual hint there's more to swipe to. */}
+        <select
+          value={tab}
+          onChange={(e) => handleTabChange(e.target.value)}
+          className="w-full rounded-xl border border-border bg-surface-muted px-3 py-2.5 text-sm font-semibold text-text-h outline-none focus:border-accent sm:hidden"
+        >
+          {TAB_ITEMS.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </select>
+
+        <TabsList className="hidden sm:flex">
+          {TAB_ITEMS.map((item) => (
+            <TabsTrigger key={item.value} value={item.value}>
+              {item.label}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         <TabsContent value="overview">
