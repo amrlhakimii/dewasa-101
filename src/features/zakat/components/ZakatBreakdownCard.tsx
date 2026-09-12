@@ -37,9 +37,9 @@ export function ZakatBreakdownCard() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border border-border px-4 py-3 text-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border px-4 py-3 text-sm">
           <span className="text-text">Rebat ini mengurangkan cukai anda sebanyak</span>
-          <span className="font-semibold text-brand-300">{formatCurrency(taxState.zakatPaid)}</span>
+          <span className="shrink-0 font-semibold text-brand-300">{formatCurrency(taxState.zakatPaid)}</span>
         </div>
 
         <SourceNote label="Lembaga Zakat Selangor — Zakat Pendapatan" href={DATA_SOURCES.ZAKAT_PENDAPATAN} />

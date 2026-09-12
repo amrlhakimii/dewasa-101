@@ -58,10 +58,10 @@ export function DebtInputForm() {
               {customDebts.map((debt) => (
                 <div
                   key={debt.id}
-                  className="flex items-center justify-between rounded-xl border border-border bg-surface-muted px-3 py-2 text-sm"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-surface-muted px-3 py-2 text-sm"
                 >
-                  <span className="text-text-h">{debt.label}</span>
-                  <span className="flex items-center gap-3">
+                  <span className="min-w-0 truncate text-text-h">{debt.label}</span>
+                  <span className="flex shrink-0 items-center gap-3">
                     <span className="font-semibold text-text-h">{formatCurrency(debt.amount)}</span>
                     <button
                       type="button"
@@ -79,11 +79,12 @@ export function DebtInputForm() {
 
           <div className="grid grid-cols-[1fr_auto] gap-2">
             <Input
+              className="min-w-0"
               placeholder="Cth: Bil telefon, Netflix, ShopeePay Later"
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
             />
-            <div className="w-28">
+            <div className="w-24 sm:w-28">
               <NumberField placeholder="RM" value={newAmount} onValueChange={setNewAmount} />
             </div>
           </div>

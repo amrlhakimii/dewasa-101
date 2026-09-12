@@ -158,11 +158,11 @@ export function PanduanPage() {
 
 function BudgetRow({ label, percent, value }: { label: string; percent: number; value: number }) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-surface-muted px-3 py-2.5 text-sm">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-xl bg-surface-muted px-3 py-2.5 text-sm">
       <span className="text-text">
         {label} <span className="text-text-h">({percent}%)</span>
       </span>
-      <span className="font-semibold text-text-h">{formatCurrency(value)}</span>
+      <span className="shrink-0 font-semibold text-text-h">{formatCurrency(value)}</span>
     </div>
   );
 }

@@ -143,9 +143,9 @@ export function GoalSimulator() {
 
         {kind === 'car' && (
           <div className="rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-sm font-semibold text-text-h">Berapa harga kereta patut saya beli?</p>
-              <div className="flex gap-1 rounded-full bg-surface-muted p-0.5">
+              <div className="flex shrink-0 gap-1 rounded-full bg-surface-muted p-0.5">
                 {([20, 30] as const).map((pct) => (
                   <button
                     key={pct}
@@ -263,14 +263,14 @@ export function GoalSimulator() {
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="carInsurance">Insurans (RM/tahun)</Label>
               <NumberField id="carInsurance" value={annualInsurance} onValueChange={setAnnualInsurance} />
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
                 <p className="text-xs text-text">
                   Anggaran: {formatCurrency(insuranceEstimate.low)}–{formatCurrency(insuranceEstimate.high)}/thn
                 </p>
                 <button
                   type="button"
                   onClick={() => setAnnualInsurance(insuranceMid)}
-                  className="text-xs font-semibold text-brand-300 hover:underline"
+                  className="shrink-0 text-xs font-semibold text-brand-300 hover:underline"
                 >
                   Guna anggaran
                 </button>
@@ -316,12 +316,12 @@ export function GoalSimulator() {
               const Icon = KIND_META[s.input.kind].icon;
               return (
                 <div key={s.id} className="rounded-xl border border-border bg-surface-muted px-3 py-2 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-2 text-text-h">
-                      <Icon size={14} className="text-brand-300" />
-                      {s.label}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-2 text-text-h">
+                      <Icon size={14} className="shrink-0 text-brand-300" />
+                      <span className="truncate">{s.label}</span>
                     </span>
-                    <span className="flex items-center gap-3">
+                    <span className="flex shrink-0 items-center gap-3">
                       <span className="font-semibold text-text-h">{formatCurrency(result.monthlyAmount)}/bln</span>
                       <button
                         type="button"
@@ -352,9 +352,9 @@ export function GoalSimulator() {
             <span className="text-text">DSR semasa</span>
             <span className="font-semibold text-text-h">{formatPercent(currentDsr)}</span>
           </div>
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <span className="text-text">Unjuran DSR dengan tambahan {formatCurrency(plannedMonthly)}/bln</span>
-            <span className="flex items-center gap-2">
+            <span className="flex shrink-0 items-center gap-2">
               <span className="font-semibold text-text-h">{formatPercent(projectedDsr)}</span>
               <Badge tone={RISK_TONE[projectedRisk]}>{formatRiskLevel(projectedRisk)}</Badge>
             </span>

@@ -31,9 +31,9 @@ export function DeductionsBreakdownCard() {
 
         <div className="flex flex-col gap-2 border-t border-border pt-4">
           {rows.map((row) => (
-            <div key={row.label} className="flex items-center justify-between text-sm">
+            <div key={row.label} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
               <span className="text-text">{row.label}</span>
-              <span className="font-medium text-text-h">-{formatCurrency(row.value)}</span>
+              <span className="shrink-0 font-medium text-text-h">-{formatCurrency(row.value)}</span>
             </div>
           ))}
           <div className="flex items-center justify-between border-t border-border pt-2 text-sm">

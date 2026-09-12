@@ -27,12 +27,13 @@ interface OverviewPageProps {
 }
 
 const QUICK_ACTIONS: { question: string; tab: string; icon: typeof Car }[] = [
-  { question: 'Nak beli kereta?', tab: 'simulation', icon: Car },
-  { question: 'Nak sewa rumah?', tab: 'housing', icon: Home },
-  { question: 'Nak kira zakat?', tab: 'zakat', icon: Banknote },
-  { question: 'Nak kira cukai?', tab: 'tax', icon: Landmark },
-  { question: 'Nak tengok KWSP?', tab: 'retirement', icon: PiggyBank },
+  { question: 'Nak semak gaji?', tab: 'income', icon: Wallet },
   { question: 'Nak semak hutang?', tab: 'commitments', icon: Scale },
+  { question: 'Nak sewa rumah?', tab: 'housing', icon: Home },
+  { question: 'Nak beli kereta?', tab: 'simulation', icon: Car },
+  { question: 'Nak kira cukai?', tab: 'tax', icon: Landmark },
+  { question: 'Nak kira zakat?', tab: 'zakat', icon: Banknote },
+  { question: 'Nak tengok KWSP?', tab: 'retirement', icon: PiggyBank },
   { question: 'Nak belajar asas kewangan?', tab: 'guide', icon: GraduationCap },
 ];
 
@@ -149,15 +150,15 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
           <CardTitle>Nak buat apa hari ini?</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {QUICK_ACTIONS.map(({ question, tab, icon: Icon }) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => onNavigate(tab)}
-                className="flex flex-col items-start gap-2 rounded-xl border border-border bg-surface-muted px-4 py-3 text-left transition-colors hover:bg-white/5"
+                className="flex min-w-0 flex-col items-start gap-2 rounded-xl border border-border bg-surface-muted px-4 py-3 text-left transition-colors hover:bg-white/5"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-500/15 text-brand-300">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand-500/15 text-brand-300">
                   <Icon size={16} />
                 </span>
                 <span className="text-sm font-semibold text-text-h">{question}</span>

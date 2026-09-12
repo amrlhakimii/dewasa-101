@@ -32,8 +32,8 @@ export function StatCard({ label, value, caption, icon: Icon, tone = 'default', 
         className,
       )}
     >
-      <div className="flex items-start justify-between">
-        <span className="label-eyebrow">{label}</span>
+      <div className="flex items-start justify-between gap-2">
+        <span className="label-eyebrow min-w-0">{label}</span>
         {Icon && (
           <span className={cn('flex h-8 w-8 shrink-0 items-center justify-center rounded-xl', iconToneClasses[tone])}>
             <Icon size={16} strokeWidth={2.5} />

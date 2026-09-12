@@ -6,6 +6,7 @@ import { DebtInputForm } from '@/features/debt-dsr/components/DebtInputForm';
 import { DsrGaugeometer } from '@/features/debt-dsr/components/DsrGaugeometer';
 import { GoalSimulator } from '@/features/goal-planner/components/GoalSimulator';
 import { PanduanPage } from '@/features/guide/components/PanduanPage';
+import { HolidayPlannerPage } from '@/features/holiday-planner/components/HolidayPlannerPage';
 import { RentVsBuySimulator } from '@/features/living-costs/components/RentVsBuySimulator';
 import { DeductionsBreakdownCard } from '@/features/net-salary/components/DeductionsBreakdownCard';
 import { SalaryInputForm } from '@/features/net-salary/components/SalaryInputForm';
@@ -32,6 +33,7 @@ const TAB_ITEMS = [
   { value: 'zakat', label: 'Zakat' },
   { value: 'retirement', label: 'KWSP' },
   { value: 'guide', label: 'Panduan' },
+  { value: 'holidays', label: 'Cuti' },
 ] as const;
 
 function App() {
@@ -134,6 +136,10 @@ function App() {
 
         <TabsContent value="guide">
           <PanduanPage />
+        </TabsContent>
+
+        <TabsContent value="holidays">
+          <HolidayPlannerPage />
         </TabsContent>
       </Tabs>
     </DashboardLayout>

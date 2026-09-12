@@ -16,6 +16,10 @@ export interface PersistedFinanceState {
   lowestSavingsBalance: number;
   paysZakatFitrah: boolean;
   riceGrade: RiceGrade;
+  annualLeaveBalance: number;
+  medicalLeaveBalance: number;
+  otherLeaveBalance: number;
+  bookedLeaveDates: string[]; // ISO dates the user has marked as booked
 }
 
 const DEFAULT_STATE: PersistedFinanceState = {
@@ -37,6 +41,10 @@ const DEFAULT_STATE: PersistedFinanceState = {
   lowestSavingsBalance: 0,
   paysZakatFitrah: false,
   riceGrade: 'Standard',
+  annualLeaveBalance: 0,
+  medicalLeaveBalance: 0,
+  otherLeaveBalance: 0,
+  bookedLeaveDates: [],
 };
 
 let nextCustomDebtId = 1;
@@ -56,6 +64,10 @@ interface FinanceState extends PersistedFinanceState {
   setLowestSavingsBalance: (amount: number) => void;
   setPaysZakatFitrah: (value: boolean) => void;
   setRiceGrade: (grade: RiceGrade) => void;
+  setAnnualLeaveBalance: (days: number) => void;
+  setMedicalLeaveBalance: (days: number) => void;
+  setOtherLeaveBalance: (days: number) => void;
+  toggleBookedLeave: (iso: string) => void;
   hydrate: (data: PersistedFinanceState) => void;
   /** Wipes the store back to defaults — used when switching/signing out of an
    * account so a new session never inherits the previous user's data. */
@@ -87,7 +99,24 @@ export const useFinanceStore = create<FinanceState>((set) => ({
   setLowestSavingsBalance: (amount) => set({ lowestSavingsBalance: Math.max(0, amount) }),
   setPaysZakatFitrah: (value) => set({ paysZakatFitrah: value }),
   setRiceGrade: (riceGrade) => set({ riceGrade }),
-  hydrate: (data) => set({ ...data, customDebts: data.customDebts ?? [] }),
+  setAnnualLeaveBalance: (days) => set({ annualLeaveBalance: Math.max(0, days) }),
+  setMedicalLeaveBalance: (days) => set({ medicalLeaveBalance: Math.max(0, days) }),
+  setOtherLeaveBalance: (days) => set({ otherLeaveBalance: Math.max(0, days) }),
+  toggleBookedLeave: (iso) =>
+    set((state) => ({
+      bookedLeaveDates: state.bookedLeaveDates.includes(iso)
+        ? state.bookedLeaveDates.filter((d) => d !== iso)
+        : [...state.bookedLeaveDates, iso],
+    })),
+  hydrate: (data) =>
+    set({
+      ...data,
+      customDebts: data.customDebts ?? [],
+      bookedLeaveDates: data.bookedLeaveDates ?? [],
+      annualLeaveBalance: data.annualLeaveBalance ?? 0,
+      medicalLeaveBalance: data.medicalLeaveBalance ?? 0,
+      otherLeaveBalance: data.otherLeaveBalance ?? 0,
+    }),
   reset: () => set(DEFAULT_STATE),
 }));
 
@@ -105,5 +134,9 @@ export function getPersistedState(state: FinanceState): PersistedFinanceState {
     lowestSavingsBalance: state.lowestSavingsBalance,
     paysZakatFitrah: state.paysZakatFitrah,
     riceGrade: state.riceGrade,
+    annualLeaveBalance: state.annualLeaveBalance,
+    medicalLeaveBalance: state.medicalLeaveBalance,
+    otherLeaveBalance: state.otherLeaveBalance,
+    bookedLeaveDates: state.bookedLeaveDates,
   };
 }

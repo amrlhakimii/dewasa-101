@@ -33,9 +33,11 @@ export function DsrGaugeometer() {
 
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between">
+      <CardHeader className="flex-row flex-wrap items-center justify-between gap-2">
         <CardTitle>Nisbah Khidmat Hutang (DSR)</CardTitle>
-        <Badge tone={RISK_TONE[dsrRisk]}>{formatRiskLevel(dsrRisk)}</Badge>
+        <Badge tone={RISK_TONE[dsrRisk]} className="shrink-0">
+          {formatRiskLevel(dsrRisk)}
+        </Badge>
       </CardHeader>
       <CardContent>
         <div className="relative mx-auto h-48 w-48">

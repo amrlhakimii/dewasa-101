@@ -89,6 +89,7 @@ export const DATA_SOURCES = {
   MYTAX: 'https://mytax.hasil.gov.my/',
   CCRIS: 'https://www.bnm.gov.my/ccris',
   CTOS: 'https://www.ctoscredit.com.my/',
+  PUBLIC_HOLIDAYS: 'https://publicholidays.com.my/',
 } as const;
 
 export interface RoadTaxBracket {
