@@ -2,8 +2,10 @@ import { useMemo } from 'react';
 import { NISAB_ESTIMATED_VALUE } from '@/config/statutory';
 import { calculateDSR, getDSRRiskLevel, getTotalMonthlyDebt } from '@/features/debt-dsr/logic';
 import { calculateDeductions, getNetPay } from '@/features/net-salary/logic';
-import { getZakatFitrahRate, TAX_RELIEF_CHECKLIST } from '@/features/tax-zakat/data';
-import { calculateFinalTaxWithZakatRebate, calculateLHDNTax, calculateZakatPendapatan } from '@/features/tax-zakat/logic';
+import { TAX_RELIEF_CHECKLIST } from '@/features/tax/data';
+import { calculateFinalTaxWithZakatRebate, calculateLHDNTax } from '@/features/tax/logic';
+import { getZakatFitrahRate } from '@/features/zakat/data';
+import { calculateZakatPendapatan } from '@/features/zakat/logic';
 import { useFinanceStore } from '@/stores/useFinanceStore';
 import { roundTo2 } from '@/utils/math';
 
@@ -36,7 +38,8 @@ export function useDerivedFinance() {
       getNetPay(monthlyTaxableGross, state.freelanceIncome) + state.nonTaxableAllowances - monthlyPcb,
     );
 
-    const totalMonthlyDebt = getTotalMonthlyDebt(state.monthlyDebts);
+    const customDebtsTotal = roundTo2(state.customDebts.reduce((total, d) => total + d.amount, 0));
+    const totalMonthlyDebt = roundTo2(getTotalMonthlyDebt(state.monthlyDebts) + customDebtsTotal);
     const dsr = calculateDSR(totalMonthlyDebt, netMonthlyIncome);
     const dsrRisk = getDSRRiskLevel(dsr);
 
@@ -55,6 +58,7 @@ export function useDerivedFinance() {
       zakatFitrah,
       monthlyPcb,
       netMonthlyIncome,
+      customDebtsTotal,
       totalMonthlyDebt,
       dsr,
       dsrRisk,

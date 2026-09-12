@@ -16,21 +16,21 @@ export function SalaryInputForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Income details</CardTitle>
+        <CardTitle>Butiran Pendapatan</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="grossSalary">Gaji pokok bulanan (basic monthly salary)</Label>
+          <Label htmlFor="grossSalary">Gaji pokok bulanan</Label>
           <NumberField id="grossSalary" value={grossSalary} onValueChange={setGrossSalary} />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="taxableAllowances">Taxable allowances (transport, fixed bonus, etc.)</Label>
+          <Label htmlFor="taxableAllowances">Elaun bercukai (transport, bonus tetap, dll.)</Label>
           <NumberField id="taxableAllowances" value={taxableAllowances} onValueChange={setTaxableAllowances} />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="nonTaxableAllowances">Non-taxable allowances (per diem, medical claims)</Label>
+          <Label htmlFor="nonTaxableAllowances">Elaun tidak bercukai (elaun harian, tuntutan perubatan)</Label>
           <NumberField
             id="nonTaxableAllowances"
             value={nonTaxableAllowances}
@@ -39,7 +39,7 @@ export function SalaryInputForm() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="freelanceIncome">Freelance / side-hustle income (monthly)</Label>
+          <Label htmlFor="freelanceIncome">Pendapatan sampingan / freelance (bulanan)</Label>
           <NumberField id="freelanceIncome" value={freelanceIncome} onValueChange={setFreelanceIncome} />
         </div>
       </CardContent>

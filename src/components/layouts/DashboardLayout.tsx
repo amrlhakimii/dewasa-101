@@ -16,7 +16,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               <h1 className="font-display text-base font-bold">
                 <span className="text-brand-300">Dewasa</span> <span className="text-text-h">101</span>
               </h1>
-              <p className="text-xs text-text">Financial reality checks for young Malaysians</p>
+              <p className="text-xs text-text">Semakan realiti kewangan untuk generasi muda Malaysia</p>
             </div>
           </div>
           <AuthButton />

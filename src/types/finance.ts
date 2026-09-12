@@ -7,12 +7,19 @@ export interface DebtProfile {
   existingMortgage: number;
 }
 
+export interface CustomDebtItem {
+  id: string;
+  label: string;
+  amount: number;
+}
+
 export interface FinancialProfile {
   grossSalary: number;
   freelanceIncome: number;
   taxableAllowances: number;
   nonTaxableAllowances: number;
   monthlyDebts: DebtProfile;
+  customDebts: CustomDebtItem[];
 }
 
 // Statutory Deductions

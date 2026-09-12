@@ -16,34 +16,34 @@ export function RentVsBuySimulator() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>The Reality Check: moving out</CardTitle>
-        <CardDescription>Upfront cash you need before you get the keys — not the monthly instalment.</CardDescription>
+        <CardTitle>Semakan Realiti: Berpindah Rumah</CardTitle>
+        <CardDescription>Wang tunai perlu disediakan sebelum dapat kunci — bukan ansuran bulanan.</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="rent">
           <TabsList>
-            <TabsTrigger value="rent">Renting</TabsTrigger>
-            <TabsTrigger value="buy">Buying</TabsTrigger>
+            <TabsTrigger value="rent">Menyewa</TabsTrigger>
+            <TabsTrigger value="buy">Membeli</TabsTrigger>
           </TabsList>
 
           <TabsContent value="rent">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="monthlyRent">Monthly rent (RM)</Label>
+                <Label htmlFor="monthlyRent">Sewa bulanan (RM)</Label>
                 <NumberField id="monthlyRent" value={monthlyRent} onValueChange={setMonthlyRent} />
               </div>
 
               <div className="rounded-2xl bg-surface-muted p-4">
-                <p className="text-sm text-text">Total cash required to move in</p>
+                <p className="text-sm text-text">Jumlah tunai diperlukan untuk berpindah masuk</p>
                 <p className="text-3xl font-bold text-accent">{formatCurrency(rentCosts.totalCashRequired)}</p>
               </div>
 
               <div className="flex flex-col gap-2 text-sm">
-                <Row label="Security deposit (2 months)" value={rentCosts.breakdown.securityDeposit} />
-                <Row label="Utility deposit (0.5 month)" value={rentCosts.breakdown.utilityDeposit} />
-                <Row label="Advance rental (1 month)" value={rentCosts.breakdown.advanceRental} />
-                <Row label="Tenancy stamp duty" value={rentCosts.breakdown.stampDuty} />
-                <Row label="Agency admin fee" value={rentCosts.breakdown.estimatedAdminFee} />
+                <Row label="Deposit keselamatan (2 bulan)" value={rentCosts.breakdown.securityDeposit} />
+                <Row label="Deposit utiliti (0.5 bulan)" value={rentCosts.breakdown.utilityDeposit} />
+                <Row label="Sewa pendahuluan (1 bulan)" value={rentCosts.breakdown.advanceRental} />
+                <Row label="Duti setem perjanjian sewa" value={rentCosts.breakdown.stampDuty} />
+                <Row label="Yuran pentadbiran ejen" value={rentCosts.breakdown.estimatedAdminFee} />
               </div>
             </div>
           </TabsContent>
@@ -51,20 +51,20 @@ export function RentVsBuySimulator() {
           <TabsContent value="buy">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="propertyPrice">Property price (RM)</Label>
+                <Label htmlFor="propertyPrice">Harga hartanah (RM)</Label>
                 <NumberField id="propertyPrice" value={propertyPrice} onValueChange={setPropertyPrice} />
               </div>
 
               <div className="rounded-2xl bg-surface-muted p-4">
-                <p className="text-sm text-text">Total cash required to complete purchase</p>
+                <p className="text-sm text-text">Jumlah tunai diperlukan untuk selesaikan pembelian</p>
                 <p className="text-3xl font-bold text-accent">{formatCurrency(buyCosts.totalCashRequired)}</p>
               </div>
 
               <div className="flex flex-col gap-2 text-sm">
-                <Row label="Down payment (10%)" value={buyCosts.downPayment} />
-                <Row label="MOT stamp duty" value={buyCosts.mot} />
-                <Row label="Legal fees (SPA)" value={buyCosts.legalFees} />
-                <Row label="Loan agreement stamp duty" value={buyCosts.loanAgreementStampDuty} />
+                <Row label="Bayaran pendahuluan (10%)" value={buyCosts.downPayment} />
+                <Row label="Duti setem MOT" value={buyCosts.mot} />
+                <Row label="Yuran guaman (SPA)" value={buyCosts.legalFees} />
+                <Row label="Duti setem perjanjian pinjaman" value={buyCosts.loanAgreementStampDuty} />
               </div>
             </div>
           </TabsContent>

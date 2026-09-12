@@ -71,3 +71,18 @@ export const DSR_THRESHOLDS = {
   SAFE_MAX: 50,
   WARNING_MAX: 60,
 } as const;
+
+// KWSP historical average dividend rate (Simpanan Konvensional), used as the
+// default growth assumption for the retirement projection — actual rate is
+// declared annually and varies. See KWSP_SOURCE_URL below.
+export const KWSP_DEFAULT_DIVIDEND_RATE = 0.055;
+export const KWSP_DEFAULT_RETIREMENT_AGE = 60;
+
+// Sources — shown in-app next to the figures they justify, so users can
+// verify against the primary authority rather than trusting this app blindly.
+export const DATA_SOURCES = {
+  LHDN_TAX_RATE: 'https://www.hasil.gov.my/en/individual/individual-life-cycle/income-declaration/tax-rate/',
+  ZAKAT_PENDAPATAN: 'https://www.zakatselangor.com.my/zakat-pendapatan-2/',
+  ZAKAT_FITRAH: 'https://www.muftiselangor.gov.my/',
+  KWSP: 'https://www.kwsp.gov.my/',
+} as const;

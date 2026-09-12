@@ -22,7 +22,7 @@ export function calculateDeductions(grossSalary: number): StatutoryDeductions {
     epfEmployer: roundTo2(epfEmployer),
     socso: roundTo2(socso),
     eis: roundTo2(eis),
-    pcbEstimate: 0, // Calculated separately using LHDN brackets (see tax-zakat module)
+    pcbEstimate: 0, // Calculated separately using LHDN brackets (see features/tax)
   };
 }
 

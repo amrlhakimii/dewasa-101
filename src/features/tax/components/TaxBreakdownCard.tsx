@@ -1,28 +1,29 @@
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { calculateLHDNTax } from '@/features/tax-zakat/logic';
+import { SourceNote } from '@/components/ui/source-note';
+import { DATA_SOURCES } from '@/config/statutory';
+import { calculateLHDNTax } from '@/features/tax/logic';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
 import { formatCurrency } from '@/utils/formatters';
 
-export function ZakatRebateVisualizer() {
-  const { annualIncome, taxState, zakatPendapatan, zakatFitrah } = useDerivedFinance();
+export function TaxBreakdownCard() {
+  const { annualIncome, taxState } = useDerivedFinance();
 
   const taxBeforeRelief = calculateLHDNTax(annualIncome, 0);
 
   const chartData = [
-    { name: 'Tax\n(no relief)', value: taxBeforeRelief, fill: 'var(--color-text)' },
-    { name: 'Tax\n(with relief)', value: taxState.baseTaxPayable, fill: 'var(--color-accent)' },
-    { name: 'Zakat\npaid', value: taxState.zakatPaid, fill: 'var(--color-success)' },
-    { name: 'Final tax\n(after rebate)', value: taxState.finalTaxPayable, fill: 'var(--color-danger)' },
+    { name: 'Tiada\npelepasan', value: taxBeforeRelief, fill: 'var(--color-text)' },
+    { name: 'Dengan\npelepasan', value: taxState.baseTaxPayable, fill: 'var(--color-accent)' },
+    { name: 'Cukai akhir\n(selepas rebat)', value: taxState.finalTaxPayable, fill: 'var(--color-danger)' },
   ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>LHDN vs Zakat: how the rebate works</CardTitle>
+        <CardTitle>Anggaran Cukai Pendapatan (LHDN)</CardTitle>
         <CardDescription>
-          Tax relief shrinks your taxable income before rates apply. Zakat is a direct, dollar-for-dollar
-          rebate against the tax bill itself — Section 6A(3).
+          Pelepasan cukai mengecilkan pendapatan bercukai sebelum kadar dikenakan. Baki akhir di bawah sudah
+          termasuk rebat zakat {formatCurrency(taxState.zakatPaid)} dari halaman Zakat.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -50,16 +51,12 @@ export function ZakatRebateVisualizer() {
           </ResponsiveContainer>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-          <div className="rounded-xl bg-success-bg px-3 py-2">
-            <p className="text-text">Zakat Pendapatan</p>
-            <p className="font-semibold text-success">{formatCurrency(zakatPendapatan)}</p>
-          </div>
-          <div className="rounded-xl bg-success-bg px-3 py-2">
-            <p className="text-text">Zakat Fitrah</p>
-            <p className="font-semibold text-success">{formatCurrency(zakatFitrah)}</p>
-          </div>
+        <div className="mt-4 rounded-xl bg-surface-muted px-3 py-2">
+          <p className="text-sm text-text">Cukai perlu dibayar setahun</p>
+          <p className="text-2xl font-bold text-text-h">{formatCurrency(taxState.finalTaxPayable)}</p>
         </div>
+
+        <SourceNote label="Lembaga Hasil Dalam Negeri (LHDN) — Kadar Cukai" href={DATA_SOURCES.LHDN_TAX_RATE} />
       </CardContent>
     </Card>
   );

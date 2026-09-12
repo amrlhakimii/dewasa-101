@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { DebtProfile, RiceGrade } from '@/types/finance';
+import type { CustomDebtItem, DebtProfile, RiceGrade } from '@/types/finance';
 
 // The subset of state that gets persisted to Firestore per signed-in user —
 // deliberately excludes actions (functions aren't serializable).
@@ -9,6 +9,7 @@ export interface PersistedFinanceState {
   taxableAllowances: number;
   nonTaxableAllowances: number;
   monthlyDebts: DebtProfile;
+  customDebts: CustomDebtItem[];
   claimedReliefIds: string[];
   zakatState: string;
   zakatDependents: number;
@@ -29,6 +30,7 @@ const DEFAULT_STATE: PersistedFinanceState = {
     ptptn: 0,
     existingMortgage: 0,
   },
+  customDebts: [],
   claimedReliefIds: [],
   zakatState: 'WP Kuala Lumpur',
   zakatDependents: 0,
@@ -37,6 +39,8 @@ const DEFAULT_STATE: PersistedFinanceState = {
   riceGrade: 'Standard',
 };
 
+let nextCustomDebtId = 1;
+
 interface FinanceState extends PersistedFinanceState {
   // Actions
   setGrossSalary: (amount: number) => void;
@@ -44,6 +48,8 @@ interface FinanceState extends PersistedFinanceState {
   setTaxableAllowances: (amount: number) => void;
   setNonTaxableAllowances: (amount: number) => void;
   setMonthlyDebt: (key: keyof DebtProfile, amount: number) => void;
+  addCustomDebt: (label: string, amount: number) => void;
+  removeCustomDebt: (id: string) => void;
   toggleRelief: (id: string) => void;
   setZakatState: (state: string) => void;
   setZakatDependents: (count: number) => void;
@@ -65,6 +71,11 @@ export const useFinanceStore = create<FinanceState>((set) => ({
   setNonTaxableAllowances: (amount) => set({ nonTaxableAllowances: Math.max(0, amount) }),
   setMonthlyDebt: (key, amount) =>
     set((state) => ({ monthlyDebts: { ...state.monthlyDebts, [key]: Math.max(0, amount) } })),
+  addCustomDebt: (label, amount) =>
+    set((state) => ({
+      customDebts: [...state.customDebts, { id: String(nextCustomDebtId++), label, amount: Math.max(0, amount) }],
+    })),
+  removeCustomDebt: (id) => set((state) => ({ customDebts: state.customDebts.filter((d) => d.id !== id) })),
   toggleRelief: (id) =>
     set((state) => ({
       claimedReliefIds: state.claimedReliefIds.includes(id)
@@ -76,7 +87,7 @@ export const useFinanceStore = create<FinanceState>((set) => ({
   setLowestSavingsBalance: (amount) => set({ lowestSavingsBalance: Math.max(0, amount) }),
   setPaysZakatFitrah: (value) => set({ paysZakatFitrah: value }),
   setRiceGrade: (riceGrade) => set({ riceGrade }),
-  hydrate: (data) => set(data),
+  hydrate: (data) => set({ ...data, customDebts: data.customDebts ?? [] }),
   reset: () => set(DEFAULT_STATE),
 }));
 
@@ -87,6 +98,7 @@ export function getPersistedState(state: FinanceState): PersistedFinanceState {
     taxableAllowances: state.taxableAllowances,
     nonTaxableAllowances: state.nonTaxableAllowances,
     monthlyDebts: state.monthlyDebts,
+    customDebts: state.customDebts,
     claimedReliefIds: state.claimedReliefIds,
     zakatState: state.zakatState,
     zakatDependents: state.zakatDependents,

@@ -9,7 +9,7 @@ import { calculateDSR, getDSRRiskLevel } from '@/features/debt-dsr/logic';
 import { getTotalScenarioMonthly, resolveScenario, type Scenario, type ScenarioKind } from '@/features/goal-planner/logic';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
 import { cn } from '@/lib/utils';
-import { formatCurrency, formatPercent } from '@/utils/formatters';
+import { formatCurrency, formatPercent, formatRiskLevel } from '@/utils/formatters';
 import type { DsrRiskLevel } from '@/types/finance';
 
 const RISK_TONE: Record<DsrRiskLevel, 'success' | 'warning' | 'danger'> = {
@@ -19,9 +19,9 @@ const RISK_TONE: Record<DsrRiskLevel, 'success' | 'warning' | 'danger'> = {
 };
 
 const KIND_META: Record<ScenarioKind, { label: string; icon: typeof Car }> = {
-  car: { label: 'Car', icon: Car },
-  room: { label: 'Room / rental', icon: Home },
-  custom: { label: 'Custom', icon: Sparkles },
+  car: { label: 'Kereta', icon: Car },
+  room: { label: 'Bilik / sewa', icon: Home },
+  custom: { label: 'Lain-lain', icon: Sparkles },
 };
 
 let nextId = 1;
@@ -49,7 +49,7 @@ export function GoalSimulator() {
         ...prev,
         {
           id,
-          label: label || 'Car loan',
+          label: label || 'Pinjaman kereta',
           input: {
             kind: 'car',
             price,
@@ -63,11 +63,11 @@ export function GoalSimulator() {
         },
       ]);
     } else if (kind === 'room') {
-      setScenarios((prev) => [...prev, { id, label: label || 'Room rental', input: { kind: 'room', monthlyRent } }]);
+      setScenarios((prev) => [...prev, { id, label: label || 'Sewa bilik', input: { kind: 'room', monthlyRent } }]);
     } else {
       setScenarios((prev) => [
         ...prev,
-        { id, label: label || 'Custom commitment', input: { kind: 'custom', monthlyAmount: customAmount } },
+        { id, label: label || 'Komitmen lain', input: { kind: 'custom', monthlyAmount: customAmount } },
       ]);
     }
     setLabel('');
@@ -86,10 +86,10 @@ export function GoalSimulator() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>What if I buy a car, rent a room, or...?</CardTitle>
+        <CardTitle>Nak beli kereta, sewa bilik, atau...?</CardTitle>
         <CardDescription>
-          Stack hypothetical commitments on top of your real numbers and see what it does to your DSR — before you
-          sign anything.
+          Tambah komitmen hipotesis di atas angka sebenar anda dan lihat kesannya pada DSR — sebelum anda
+          menandatangani apa-apa.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
@@ -116,7 +116,7 @@ export function GoalSimulator() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="scenarioLabel">Name (optional)</Label>
+          <Label htmlFor="scenarioLabel">Nama (pilihan)</Label>
           <Input
             id="scenarioLabel"
             placeholder={KIND_META[kind].label}
@@ -128,36 +128,36 @@ export function GoalSimulator() {
         {kind === 'car' && (
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carPrice">Price (RM)</Label>
+              <Label htmlFor="carPrice">Harga (RM)</Label>
               <NumberField id="carPrice" value={price} onValueChange={setPrice} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carDown">Down payment (%)</Label>
+              <Label htmlFor="carDown">Bayaran pendahuluan (%)</Label>
               <NumberField id="carDown" value={downPaymentPercent} onValueChange={setDownPaymentPercent} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carRate">Interest rate (% p.a.)</Label>
+              <Label htmlFor="carRate">Kadar faedah (% setahun)</Label>
               <NumberField id="carRate" value={interestRatePercent} onValueChange={setInterestRatePercent} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carTenure">Tenure (years)</Label>
+              <Label htmlFor="carTenure">Tempoh (tahun)</Label>
               <NumberField id="carTenure" value={tenureYears} onValueChange={setTenureYears} />
             </div>
 
             <div className="col-span-2 mt-1 border-t border-border pt-3">
-              <p className="label-eyebrow">Running costs</p>
+              <p className="label-eyebrow">Kos operasi</p>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carInsurance">Insurance (RM/year)</Label>
+              <Label htmlFor="carInsurance">Insurans (RM/tahun)</Label>
               <NumberField id="carInsurance" value={annualInsurance} onValueChange={setAnnualInsurance} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carRoadTax">Road tax (RM/year)</Label>
+              <Label htmlFor="carRoadTax">Cukai jalan (RM/tahun)</Label>
               <NumberField id="carRoadTax" value={annualRoadTax} onValueChange={setAnnualRoadTax} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="carMaintenance">Service &amp; maintenance (RM/month)</Label>
+              <Label htmlFor="carMaintenance">Servis &amp; penyelenggaraan (RM/bulan)</Label>
               <NumberField id="carMaintenance" value={monthlyMaintenance} onValueChange={setMonthlyMaintenance} />
             </div>
           </div>
@@ -165,20 +165,20 @@ export function GoalSimulator() {
 
         {kind === 'room' && (
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="roomRent">Monthly rent (RM)</Label>
+            <Label htmlFor="roomRent">Sewa bulanan (RM)</Label>
             <NumberField id="roomRent" value={monthlyRent} onValueChange={setMonthlyRent} />
           </div>
         )}
 
         {kind === 'custom' && (
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="customAmount">Monthly amount (RM)</Label>
+            <Label htmlFor="customAmount">Jumlah bulanan (RM)</Label>
             <NumberField id="customAmount" value={customAmount} onValueChange={setCustomAmount} />
           </div>
         )}
 
         <Button type="button" onClick={addScenario} className="self-start">
-          Add to simulation
+          Tambah ke simulasi
         </Button>
 
         {scenarios.length > 0 && (
@@ -194,12 +194,12 @@ export function GoalSimulator() {
                       {s.label}
                     </span>
                     <span className="flex items-center gap-3">
-                      <span className="font-semibold text-text-h">{formatCurrency(result.monthlyAmount)}/mo</span>
+                      <span className="font-semibold text-text-h">{formatCurrency(result.monthlyAmount)}/bln</span>
                       <button
                         type="button"
                         onClick={() => removeScenario(s.id)}
                         className="text-text hover:text-danger"
-                        aria-label={`Remove ${s.label}`}
+                        aria-label={`Buang ${s.label}`}
                       >
                         <Trash2 size={14} />
                       </button>
@@ -207,10 +207,10 @@ export function GoalSimulator() {
                   </div>
                   {result.carBreakdown && (
                     <p className="mt-1.5 pl-6 text-xs text-text">
-                      {formatCurrency(result.carBreakdown.instalment)} instalment +{' '}
-                      {formatCurrency(result.carBreakdown.insuranceMonthly)} insurance +{' '}
-                      {formatCurrency(result.carBreakdown.roadTaxMonthly)} road tax +{' '}
-                      {formatCurrency(result.carBreakdown.maintenanceMonthly)} service
+                      {formatCurrency(result.carBreakdown.instalment)} ansuran +{' '}
+                      {formatCurrency(result.carBreakdown.insuranceMonthly)} insurans +{' '}
+                      {formatCurrency(result.carBreakdown.roadTaxMonthly)} cukai jalan +{' '}
+                      {formatCurrency(result.carBreakdown.maintenanceMonthly)} servis
                     </p>
                   )}
                 </div>
@@ -221,14 +221,14 @@ export function GoalSimulator() {
 
         <div className="flex flex-col gap-3 rounded-2xl border border-border bg-surface-muted p-4">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-text">Current DSR</span>
+            <span className="text-text">DSR semasa</span>
             <span className="font-semibold text-text-h">{formatPercent(currentDsr)}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-text">Projected DSR with {formatCurrency(plannedMonthly)}/mo added</span>
+            <span className="text-text">Unjuran DSR dengan tambahan {formatCurrency(plannedMonthly)}/bln</span>
             <span className="flex items-center gap-2">
               <span className="font-semibold text-text-h">{formatPercent(projectedDsr)}</span>
-              <Badge tone={RISK_TONE[projectedRisk]}>{projectedRisk}</Badge>
+              <Badge tone={RISK_TONE[projectedRisk]}>{formatRiskLevel(projectedRisk)}</Badge>
             </span>
           </div>
         </div>

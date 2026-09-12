@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/input';
 import { NumberField } from '@/components/ui/number-field';
-import { MALAYSIAN_STATES } from '@/features/tax-zakat/data';
+import { MALAYSIAN_STATES } from '@/features/zakat/data';
 import { useFinanceStore } from '@/stores/useFinanceStore';
 import type { RiceGrade } from '@/types/finance';
 
@@ -23,11 +23,11 @@ export function ZakatInputForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Zakat profile</CardTitle>
+        <CardTitle>Profil Zakat</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="zakatState">State (for Zakat Fitrah rate)</Label>
+          <Label htmlFor="zakatState">Negeri (untuk kadar Zakat Fitrah)</Label>
           <select
             id="zakatState"
             value={zakatState}
@@ -43,7 +43,7 @@ export function ZakatInputForm() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="lowestSavingsBalance">Lowest savings balance held for a full year (RM)</Label>
+          <Label htmlFor="lowestSavingsBalance">Baki simpanan terendah sepanjang setahun (RM)</Label>
           <NumberField id="lowestSavingsBalance" value={lowestSavingsBalance} onValueChange={setLowestSavingsBalance} />
         </div>
 
@@ -54,17 +54,17 @@ export function ZakatInputForm() {
             onChange={(e) => setPaysZakatFitrah(e.target.checked)}
             className="h-4 w-4 accent-[var(--accent)]"
           />
-          I also pay Zakat Fitrah for myself and dependents
+          Saya juga membayar Zakat Fitrah untuk diri &amp; tanggungan
         </label>
 
         {paysZakatFitrah && (
           <div className="grid grid-cols-2 gap-3 pl-6">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="zakatDependents">Dependents</Label>
+              <Label htmlFor="zakatDependents">Bilangan tanggungan</Label>
               <NumberField id="zakatDependents" value={zakatDependents} onValueChange={setZakatDependents} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="riceGrade">Rice grade</Label>
+              <Label htmlFor="riceGrade">Gred beras</Label>
               <select
                 id="riceGrade"
                 value={riceGrade}

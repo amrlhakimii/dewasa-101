@@ -9,35 +9,35 @@ export function DeductionsBreakdownCard() {
   const { deductions, monthlyPcb, netMonthlyIncome } = useDerivedFinance();
 
   const rows = [
-    { label: 'EPF (11%, you)', value: deductions.epfEmployee, tone: 'text-text' },
-    { label: 'SOCSO (0.5%, capped RM6,000)', value: deductions.socso, tone: 'text-text' },
-    { label: 'EIS (0.2%, capped RM6,000)', value: deductions.eis, tone: 'text-text' },
-    { label: 'PCB (monthly tax estimate)', value: monthlyPcb, tone: 'text-text' },
+    { label: 'KWSP (11%, anda)', value: deductions.epfEmployee },
+    { label: 'PERKESO (0.5%, siling RM6,000)', value: deductions.socso },
+    { label: 'SIP (0.2%, siling RM6,000)', value: deductions.eis },
+    { label: 'PCB (anggaran cukai bulanan)', value: monthlyPcb },
   ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gaji Sebenar (Real Take-Home Pay)</CardTitle>
+        <CardTitle>Gaji Sebenar (Gaji Bersih)</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <div>
-          <p className="text-sm text-text">Net pay lands in your bank account</p>
+          <p className="text-sm text-text">Gaji bersih masuk akaun bank anda</p>
           <p className="text-4xl font-bold tracking-tight text-accent">{formatCurrency(netMonthlyIncome)}</p>
           <p className="mt-1 text-xs text-text">
-            from a gross of {formatCurrency(grossSalary + taxableAllowances)}
+            daripada gaji kasar {formatCurrency(grossSalary + taxableAllowances)}
           </p>
         </div>
 
         <div className="flex flex-col gap-2 border-t border-border pt-4">
           {rows.map((row) => (
             <div key={row.label} className="flex items-center justify-between text-sm">
-              <span className={row.tone}>{row.label}</span>
+              <span className="text-text">{row.label}</span>
               <span className="font-medium text-text-h">-{formatCurrency(row.value)}</span>
             </div>
           ))}
           <div className="flex items-center justify-between border-t border-border pt-2 text-sm">
-            <span className="text-text">Employer also contributes EPF {formatCurrency(deductions.epfEmployer)}</span>
+            <span className="text-text">Majikan turut caruman KWSP {formatCurrency(deductions.epfEmployer)}</span>
           </div>
         </div>
       </CardContent>

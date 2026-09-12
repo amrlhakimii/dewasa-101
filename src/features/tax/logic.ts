@@ -1,4 +1,4 @@
-import { LHDN_BASE_RELIEF, LHDN_TAX_BRACKETS, ZAKAT_PENDAPATAN_RATE } from '@/config/statutory';
+import { LHDN_BASE_RELIEF, LHDN_TAX_BRACKETS } from '@/config/statutory';
 import { roundTo2 } from '@/utils/math';
 
 export function calculateLHDNTax(annualIncome: number, additionalReliefs = 0): number {
@@ -19,13 +19,7 @@ export function calculateLHDNTax(annualIncome: number, additionalReliefs = 0): n
 }
 
 export function calculateFinalTaxWithZakatRebate(calculatedLhdnTax: number, totalZakatPaid: number): number {
-  // Section 6A(3): Zakat is a direct rebate but LHDN does not refund the excess
-  // when Zakat paid exceeds tax payable.
+  // Seksyen 6A(3): Zakat ialah rebat terus tetapi LHDN tidak membayar balik
+  // lebihan apabila zakat yang dibayar melebihi cukai yang perlu dibayar.
   return roundTo2(Math.max(0, calculatedLhdnTax - totalZakatPaid));
-}
-
-/** Zakat Pendapatan (income zakat) — 2.5% of annual income once Nisab is met. */
-export function calculateZakatPendapatan(annualIncome: number, nisabValue: number): number {
-  if (annualIncome < nisabValue) return 0;
-  return roundTo2(annualIncome * ZAKAT_PENDAPATAN_RATE);
 }

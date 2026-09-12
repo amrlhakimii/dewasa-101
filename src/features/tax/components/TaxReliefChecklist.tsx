@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TAX_RELIEF_CHECKLIST } from '@/features/tax-zakat/data';
+import { SourceNote } from '@/components/ui/source-note';
+import { DATA_SOURCES, LHDN_BASE_RELIEF } from '@/config/statutory';
+import { TAX_RELIEF_CHECKLIST } from '@/features/tax/data';
 import { useFinanceStore } from '@/stores/useFinanceStore';
 import { formatCurrency } from '@/utils/formatters';
 
@@ -10,12 +12,12 @@ export function TaxReliefChecklist() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tax relief checklist</CardTitle>
+        <CardTitle>Senarai Semak Pelepasan Cukai</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <label className="flex items-center justify-between rounded-xl bg-surface-muted px-3 py-2 text-sm">
-          <span className="text-text-h">Individual base relief</span>
-          <span className="font-medium text-text-h">{formatCurrency(9000)}</span>
+          <span className="text-text-h">Pelepasan asas individu</span>
+          <span className="font-medium text-text-h">{formatCurrency(LHDN_BASE_RELIEF)}</span>
         </label>
 
         {TAX_RELIEF_CHECKLIST.map((relief) => {
@@ -32,10 +34,12 @@ export function TaxReliefChecklist() {
                 className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
               />
               <span className="flex-1 text-text">{relief.label}</span>
-              <span className="font-medium text-text-h">up to {formatCurrency(relief.max)}</span>
+              <span className="font-medium text-text-h">sehingga {formatCurrency(relief.max)}</span>
             </label>
           );
         })}
+
+        <SourceNote label="Lembaga Hasil Dalam Negeri (LHDN)" href={DATA_SOURCES.LHDN_TAX_RATE} />
       </CardContent>
     </Card>
   );
