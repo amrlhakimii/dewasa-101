@@ -143,9 +143,9 @@ export function GoalSimulator() {
 
         {kind === 'car' && (
           <div className="rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm font-semibold text-text-h">Berapa harga kereta patut saya beli?</p>
-              <div className="flex shrink-0 gap-1 rounded-full bg-surface-muted p-0.5">
+              <div className="flex gap-1 self-start rounded-full bg-surface-muted p-0.5 sm:shrink-0">
                 {([20, 30] as const).map((pct) => (
                   <button
                     key={pct}
@@ -162,16 +162,16 @@ export function GoalSimulator() {
               </div>
             </div>
 
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-surface-muted px-3 py-2">
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="min-w-0 rounded-xl bg-surface-muted px-3 py-2">
                 <p className="text-xs text-text">Aturan mudah: 1x gaji bersih setahun</p>
-                <p className="text-lg font-bold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
+                <p className="break-words text-lg font-bold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
               </div>
-              <div className="rounded-xl bg-surface-muted px-3 py-2">
+              <div className="min-w-0 rounded-xl bg-surface-muted px-3 py-2">
                 <p className="text-xs text-text">
                   Ikut had ansuran {budgetPercent}% gaji (termasuk faedah, {interestRatePercent}%/{tenureYears}thn)
                 </p>
-                <p className="text-lg font-bold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
+                <p className="break-words text-lg font-bold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
               </div>
             </div>
             <p className="mt-2 text-xs text-text">
@@ -201,7 +201,7 @@ export function GoalSimulator() {
         </div>
 
         {kind === 'car' && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="carPrice">Harga (RM)</Label>
               <NumberField id="carPrice" value={price} onValueChange={setPrice} />
@@ -224,9 +224,9 @@ export function GoalSimulator() {
             </div>
 
             <div className="col-span-2 flex flex-col gap-2 rounded-xl bg-surface-muted p-3">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-xs text-text">Anggaran cukai jalan (JPJ)</span>
-                <div className="flex gap-1 rounded-full bg-surface p-0.5">
+                <div className="flex gap-1 self-start rounded-full bg-surface p-0.5">
                   {(
                     [
                       { value: 'car' as const, icon: Car },
@@ -247,12 +247,12 @@ export function GoalSimulator() {
                   ))}
                 </div>
               </div>
-              <div className="flex items-end gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
                 <div className="flex-1">
                   <Label htmlFor="roadTaxCc">Kapasiti enjin (cc)</Label>
                   <NumberField id="roadTaxCc" value={roadTaxCc} onValueChange={setRoadTaxCc} />
                 </div>
-                <p className="pb-2.5 text-sm text-text-h">≈ {formatCurrency(roadTaxEstimate)}/thn</p>
+                <p className="text-sm text-text-h sm:pb-2.5">≈ {formatCurrency(roadTaxEstimate)}/thn</p>
               </div>
               <Button type="button" variant="ghost" size="sm" onClick={() => setAnnualRoadTax(roadTaxEstimate)}>
                 Guna anggaran ini
@@ -263,14 +263,14 @@ export function GoalSimulator() {
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="carInsurance">Insurans (RM/tahun)</Label>
               <NumberField id="carInsurance" value={annualInsurance} onValueChange={setAnnualInsurance} />
-              <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-                <p className="text-xs text-text">
+              <div className="flex flex-col items-start gap-1">
+                <p className="break-words text-xs text-text">
                   Anggaran: {formatCurrency(insuranceEstimate.low)}–{formatCurrency(insuranceEstimate.high)}/thn
                 </p>
                 <button
                   type="button"
                   onClick={() => setAnnualInsurance(insuranceMid)}
-                  className="shrink-0 text-xs font-semibold text-brand-300 hover:underline"
+                  className="text-xs font-semibold text-brand-300 hover:underline"
                 >
                   Guna anggaran
                 </button>
