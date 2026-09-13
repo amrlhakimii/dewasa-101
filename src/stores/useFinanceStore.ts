@@ -20,6 +20,7 @@ export interface PersistedFinanceState {
   medicalLeaveBalance: number;
   otherLeaveBalance: number;
   bookedLeaveDates: string[]; // ISO dates the user has marked as booked
+  hasOnboarded: boolean;
 }
 
 const DEFAULT_STATE: PersistedFinanceState = {
@@ -45,6 +46,7 @@ const DEFAULT_STATE: PersistedFinanceState = {
   medicalLeaveBalance: 0,
   otherLeaveBalance: 0,
   bookedLeaveDates: [],
+  hasOnboarded: false,
 };
 
 let nextCustomDebtId = 1;
@@ -68,6 +70,7 @@ interface FinanceState extends PersistedFinanceState {
   setMedicalLeaveBalance: (days: number) => void;
   setOtherLeaveBalance: (days: number) => void;
   toggleBookedLeave: (iso: string) => void;
+  completeOnboarding: () => void;
   hydrate: (data: PersistedFinanceState) => void;
   /** Wipes the store back to defaults — used when switching/signing out of an
    * account so a new session never inherits the previous user's data. */
@@ -108,6 +111,7 @@ export const useFinanceStore = create<FinanceState>((set) => ({
         ? state.bookedLeaveDates.filter((d) => d !== iso)
         : [...state.bookedLeaveDates, iso],
     })),
+  completeOnboarding: () => set({ hasOnboarded: true }),
   hydrate: (data) =>
     set({
       ...data,
@@ -116,6 +120,7 @@ export const useFinanceStore = create<FinanceState>((set) => ({
       annualLeaveBalance: data.annualLeaveBalance ?? 0,
       medicalLeaveBalance: data.medicalLeaveBalance ?? 0,
       otherLeaveBalance: data.otherLeaveBalance ?? 0,
+      hasOnboarded: data.hasOnboarded ?? false,
     }),
   reset: () => set(DEFAULT_STATE),
 }));
@@ -138,5 +143,6 @@ export function getPersistedState(state: FinanceState): PersistedFinanceState {
     medicalLeaveBalance: state.medicalLeaveBalance,
     otherLeaveBalance: state.otherLeaveBalance,
     bookedLeaveDates: state.bookedLeaveDates,
+    hasOnboarded: state.hasOnboarded,
   };
 }

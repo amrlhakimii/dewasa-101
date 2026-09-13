@@ -18,10 +18,12 @@ import { TaxReliefChecklist } from '@/features/tax/components/TaxReliefChecklist
 import { ZakatBreakdownCard } from '@/features/zakat/components/ZakatBreakdownCard';
 import { ZakatInputForm } from '@/features/zakat/components/ZakatInputForm';
 import { ZakatPaymentGuide } from '@/features/zakat/components/ZakatPaymentGuide';
+import { OnboardingModal } from '@/features/onboarding/components/OnboardingModal';
 import logo from '@/assets/logo-source.png';
 import { logEvent } from '@/lib/firebase';
 import { useAuth } from '@/lib/useAuth';
 import { useFirestoreSync } from '@/lib/useFirestoreSync';
+import { useFinanceStore } from '@/stores/useFinanceStore';
 
 const TAB_ITEMS = [
   { value: 'overview', label: 'Ringkasan' },
@@ -39,14 +41,15 @@ const TAB_ITEMS = [
 function App() {
   const [tab, setTab] = useState('overview');
   const { user, loading } = useAuth();
-  useFirestoreSync();
+  const { ready } = useFirestoreSync();
+  const hasOnboarded = useFinanceStore((s) => s.hasOnboarded);
 
   function handleTabChange(next: string) {
     setTab(next);
     logEvent('tab_change', { tab: next });
   }
 
-  if (loading) {
+  if (loading || (user && !ready)) {
     return (
       <div className="app-bg flex min-h-svh items-center justify-center">
         <img src={logo} alt="" className="h-14 w-14 animate-pulse rounded-2xl shadow-glow" />
@@ -60,6 +63,7 @@ function App() {
 
   return (
     <DashboardLayout>
+      {!hasOnboarded && <OnboardingModal />}
       <Tabs value={tab} onValueChange={handleTabChange}>
         {/* Small screens: a native dropdown, so every page stays reachable
             with no hidden/clipped items — a horizontal-scroll pill row gives

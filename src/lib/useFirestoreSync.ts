@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/useAuth';
 import { getPersistedState, useFinanceStore, type PersistedFinanceState } from '@/stores/useFinanceStore';
@@ -16,13 +16,19 @@ const SAVE_DEBOUNCE_MS = 800;
  * refresh, tab refocus, persistence rehydration) without an actual sign-in/
  * sign-out happening. Depending on the object reference made this effect
  * re-run mid-session, which called reset() and wiped out an edit that
- * hadn't been saved yet — hence "why does my input keep reverting". */
+ * hadn't been saved yet — hence "why does my input keep reverting".
+ *
+ * Returns `ready`: false until the initial Firestore fetch for this uid has
+ * resolved, so callers (App.tsx) can hold the loading screen a beat longer
+ * instead of briefly rendering default/stale data before the real doc loads. */
 export function useFirestoreSync() {
   const { user } = useAuth();
   const uid = user?.uid;
   const hydrate = useFinanceStore((s) => s.hydrate);
   const reset = useFinanceStore((s) => s.reset);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [readyForUid, setReadyForUid] = useState<string | undefined>(undefined);
+  const ready = readyForUid === uid;
 
   useEffect(() => {
     reset();
@@ -39,6 +45,7 @@ export function useFirestoreSync() {
       if (snapshot.exists()) {
         hydrate(snapshot.data() as PersistedFinanceState);
       }
+      setReadyForUid(uid);
 
       unsubscribeStore = useFinanceStore.subscribe((state) => {
         if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -56,4 +63,6 @@ export function useFirestoreSync() {
       unsubscribeStore?.();
     };
   }, [uid, hydrate, reset]);
+
+  return { ready };
 }
