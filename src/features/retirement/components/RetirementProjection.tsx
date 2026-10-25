@@ -1,20 +1,24 @@
-import { useState } from 'react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/input';
 import { NumberField } from '@/components/ui/number-field';
 import { SourceNote } from '@/components/ui/source-note';
-import { DATA_SOURCES, KWSP_DEFAULT_DIVIDEND_RATE, KWSP_DEFAULT_RETIREMENT_AGE } from '@/config/statutory';
+import { DATA_SOURCES } from '@/config/statutory';
 import { projectRetirementBalance } from '@/features/retirement/logic';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
+import { useFinanceStore } from '@/stores/useFinanceStore';
 import { formatCurrency } from '@/utils/formatters';
 
 export function RetirementProjection() {
   const { deductions } = useDerivedFinance();
-  const [currentAge, setCurrentAge] = useState(25);
-  const [retirementAge, setRetirementAge] = useState(KWSP_DEFAULT_RETIREMENT_AGE);
-  const [currentBalance, setCurrentBalance] = useState(15000);
-  const [dividendRatePercent, setDividendRatePercent] = useState(KWSP_DEFAULT_DIVIDEND_RATE * 100);
+  const currentAge = useFinanceStore((s) => s.kwspCurrentAge);
+  const retirementAge = useFinanceStore((s) => s.kwspRetirementAge);
+  const currentBalance = useFinanceStore((s) => s.kwspCurrentBalance);
+  const dividendRatePercent = useFinanceStore((s) => s.kwspDividendRatePercent);
+  const setCurrentAge = useFinanceStore((s) => s.setKwspCurrentAge);
+  const setRetirementAge = useFinanceStore((s) => s.setKwspRetirementAge);
+  const setCurrentBalance = useFinanceStore((s) => s.setKwspCurrentBalance);
+  const setDividendRatePercent = useFinanceStore((s) => s.setKwspDividendRatePercent);
 
   const annualContribution = (deductions.epfEmployee + deductions.epfEmployer) * 12;
   const result = projectRetirementBalance(

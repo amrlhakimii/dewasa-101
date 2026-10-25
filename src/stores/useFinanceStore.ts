@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { KWSP_DEFAULT_DIVIDEND_RATE, KWSP_DEFAULT_RETIREMENT_AGE } from '@/config/statutory';
 import type { CustomDebtItem, DebtProfile, RiceGrade } from '@/types/finance';
 
 // The subset of state that gets persisted to Firestore per signed-in user —
@@ -21,6 +22,10 @@ export interface PersistedFinanceState {
   otherLeaveBalance: number;
   bookedLeaveDates: string[]; // ISO dates the user has marked as booked
   hasOnboarded: boolean;
+  kwspCurrentAge: number;
+  kwspRetirementAge: number;
+  kwspCurrentBalance: number;
+  kwspDividendRatePercent: number;
 }
 
 const DEFAULT_STATE: PersistedFinanceState = {
@@ -47,6 +52,10 @@ const DEFAULT_STATE: PersistedFinanceState = {
   otherLeaveBalance: 0,
   bookedLeaveDates: [],
   hasOnboarded: false,
+  kwspCurrentAge: 25,
+  kwspRetirementAge: KWSP_DEFAULT_RETIREMENT_AGE,
+  kwspCurrentBalance: 15000,
+  kwspDividendRatePercent: KWSP_DEFAULT_DIVIDEND_RATE * 100,
 };
 
 let nextCustomDebtId = 1;
@@ -71,6 +80,10 @@ interface FinanceState extends PersistedFinanceState {
   setOtherLeaveBalance: (days: number) => void;
   toggleBookedLeave: (iso: string) => void;
   completeOnboarding: () => void;
+  setKwspCurrentAge: (age: number) => void;
+  setKwspRetirementAge: (age: number) => void;
+  setKwspCurrentBalance: (amount: number) => void;
+  setKwspDividendRatePercent: (percent: number) => void;
   hydrate: (data: PersistedFinanceState) => void;
   /** Wipes the store back to defaults — used when switching/signing out of an
    * account so a new session never inherits the previous user's data. */
@@ -112,6 +125,10 @@ export const useFinanceStore = create<FinanceState>((set) => ({
         : [...state.bookedLeaveDates, iso],
     })),
   completeOnboarding: () => set({ hasOnboarded: true }),
+  setKwspCurrentAge: (age) => set({ kwspCurrentAge: Math.max(0, age) }),
+  setKwspRetirementAge: (age) => set({ kwspRetirementAge: Math.max(0, age) }),
+  setKwspCurrentBalance: (amount) => set({ kwspCurrentBalance: Math.max(0, amount) }),
+  setKwspDividendRatePercent: (percent) => set({ kwspDividendRatePercent: Math.max(0, percent) }),
   hydrate: (data) =>
     set({
       ...data,
@@ -121,6 +138,10 @@ export const useFinanceStore = create<FinanceState>((set) => ({
       medicalLeaveBalance: data.medicalLeaveBalance ?? 0,
       otherLeaveBalance: data.otherLeaveBalance ?? 0,
       hasOnboarded: data.hasOnboarded ?? false,
+      kwspCurrentAge: data.kwspCurrentAge ?? DEFAULT_STATE.kwspCurrentAge,
+      kwspRetirementAge: data.kwspRetirementAge ?? DEFAULT_STATE.kwspRetirementAge,
+      kwspCurrentBalance: data.kwspCurrentBalance ?? DEFAULT_STATE.kwspCurrentBalance,
+      kwspDividendRatePercent: data.kwspDividendRatePercent ?? DEFAULT_STATE.kwspDividendRatePercent,
     }),
   reset: () => set(DEFAULT_STATE),
 }));
@@ -144,5 +165,9 @@ export function getPersistedState(state: FinanceState): PersistedFinanceState {
     otherLeaveBalance: state.otherLeaveBalance,
     bookedLeaveDates: state.bookedLeaveDates,
     hasOnboarded: state.hasOnboarded,
+    kwspCurrentAge: state.kwspCurrentAge,
+    kwspRetirementAge: state.kwspRetirementAge,
+    kwspCurrentBalance: state.kwspCurrentBalance,
+    kwspDividendRatePercent: state.kwspDividendRatePercent,
   };
 }
