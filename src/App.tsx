@@ -1,6 +1,18 @@
-import { useState } from 'react';
+import {
+  BookOpen,
+  CalendarDays,
+  CreditCard,
+  HandCoins,
+  Home,
+  LayoutDashboard,
+  PiggyBank,
+  Receipt,
+  Sparkles,
+  Wallet,
+} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { DashboardLayout } from '@/components/layouts/DashboardLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { NavList, NavTrigger, Tabs, TabsContent } from '@/components/ui/tabs';
 import { SignInPage } from '@/features/auth/components/SignInPage';
 import { DebtInputForm } from '@/features/debt-dsr/components/DebtInputForm';
 import { DsrGaugeometer } from '@/features/debt-dsr/components/DsrGaugeometer';
@@ -26,16 +38,16 @@ import { useFirestoreSync } from '@/lib/useFirestoreSync';
 import { useFinanceStore } from '@/stores/useFinanceStore';
 
 const TAB_ITEMS = [
-  { value: 'overview', label: 'Ringkasan' },
-  { value: 'income', label: 'Pendapatan' },
-  { value: 'commitments', label: 'Komitmen' },
-  { value: 'housing', label: 'Perumahan' },
-  { value: 'simulation', label: 'Simulasi' },
-  { value: 'tax', label: 'Cukai' },
-  { value: 'zakat', label: 'Zakat' },
-  { value: 'retirement', label: 'KWSP' },
-  { value: 'guide', label: 'Panduan' },
-  { value: 'holidays', label: 'Cuti' },
+  { value: 'overview', label: 'Ringkasan', icon: LayoutDashboard },
+  { value: 'income', label: 'Pendapatan', icon: Wallet },
+  { value: 'commitments', label: 'Komitmen', icon: CreditCard },
+  { value: 'housing', label: 'Perumahan', icon: Home },
+  { value: 'simulation', label: 'Simulasi', icon: Sparkles },
+  { value: 'tax', label: 'Cukai', icon: Receipt },
+  { value: 'zakat', label: 'Zakat', icon: HandCoins },
+  { value: 'retirement', label: 'KWSP', icon: PiggyBank },
+  { value: 'guide', label: 'Panduan', icon: BookOpen },
+  { value: 'holidays', label: 'Cuti', icon: CalendarDays },
 ] as const;
 
 function App() {
@@ -43,6 +55,15 @@ function App() {
   const { user, loading } = useAuth();
   const { ready } = useFirestoreSync();
   const hasOnboarded = useFinanceStore((s) => s.hasOnboarded);
+  const navRef = useRef<HTMLDivElement>(null);
+  const activeItem = TAB_ITEMS.find((item) => item.value === tab) ?? TAB_ITEMS[0];
+
+  // Keep the active nav item visible when the pill scrolls on narrow screens.
+  useEffect(() => {
+    navRef.current
+      ?.querySelector<HTMLElement>('[data-state="active"]')
+      ?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+  }, [tab, user, ready]);
 
   function handleTabChange(next: string) {
     setTab(next);
@@ -65,28 +86,36 @@ function App() {
     <DashboardLayout>
       {!hasOnboarded && <OnboardingModal />}
       <Tabs value={tab} onValueChange={handleTabChange}>
-        {/* Small screens: a native dropdown, so every page stays reachable
-            with no hidden/clipped items — a horizontal-scroll pill row gives
-            no visual hint there's more to swipe to. */}
-        <select
-          value={tab}
-          onChange={(e) => handleTabChange(e.target.value)}
-          className="w-full rounded-xl border border-border bg-surface-muted px-3 py-2.5 text-sm font-semibold text-text-h outline-none focus:border-accent sm:hidden"
-        >
-          {TAB_ITEMS.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+        <div className="mb-6 animate-fade-up">
+          <p className="label-eyebrow">Dewasa 101</p>
+          <h2 className="font-display mt-1 text-2xl font-extrabold tracking-tight md:text-3xl">{activeItem.label}</h2>
+        </div>
 
-        <TabsList className="hidden sm:flex">
-          {TAB_ITEMS.map((item) => (
-            <TabsTrigger key={item.value} value={item.value}>
-              {item.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <nav
+          aria-label="Navigasi utama"
+          className="fixed left-1/2 z-50 w-max max-w-[calc(100vw-1rem)] -translate-x-1/2"
+          style={{ bottom: 'calc(20px + env(safe-area-inset-bottom))' }}
+        >
+          <div
+            ref={navRef}
+            className="rounded-full"
+            style={{
+              background: 'rgba(18,18,20,0.65)',
+              backdropFilter: 'blur(28px) saturate(160%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(160%)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              boxShadow: '0 8px 40px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset',
+            }}
+          >
+            <NavList>
+              {TAB_ITEMS.map((item) => (
+                <NavTrigger key={item.value} value={item.value} aria-label={item.label} title={item.label}>
+                  <item.icon size={18} strokeWidth={tab === item.value ? 2.5 : 1.75} />
+                </NavTrigger>
+              ))}
+            </NavList>
+          </div>
+        </nav>
 
         <TabsContent value="overview">
           <OverviewPage onNavigate={handleTabChange} />

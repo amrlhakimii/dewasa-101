@@ -6,17 +6,17 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="app-bg">
       <header
-        className="sticky top-0 z-10 border-b border-border bg-bg/70 backdrop-blur-md"
+        className="sticky top-0 z-10 border-b border-hairline bg-bg/60 backdrop-blur-xl"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <div className="flex items-center gap-2.5">
             <img src={logo} alt="Dewasa 101" className="h-8 w-8 rounded-xl shadow-glow" />
             <div>
-              <h1 className="font-display text-base font-bold">
+              <h1 className="font-display text-lg font-extrabold tracking-tight">
                 <span className="text-brand-300">Dewasa</span> <span className="text-text-h">101</span>
               </h1>
-              <p className="text-xs text-text">Semakan realiti kewangan untuk generasi muda Malaysia</p>
+              <p className="hidden text-xs text-text sm:block">Semakan realiti kewangan untuk generasi muda Malaysia</p>
             </div>
           </div>
           <AuthButton />
@@ -28,7 +28,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         style={{
           paddingLeft: 'max(1rem, env(safe-area-inset-left))',
           paddingRight: 'max(1rem, env(safe-area-inset-right))',
-          paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
+          paddingBottom: 'calc(7rem + env(safe-area-inset-bottom))',
         }}
       >
         {children}

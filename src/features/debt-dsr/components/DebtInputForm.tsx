@@ -66,7 +66,7 @@ export function DebtInputForm() {
                     <button
                       type="button"
                       onClick={() => removeCustomDebt(debt.id)}
-                      className="text-text hover:text-danger"
+                      className="-m-3 cursor-pointer p-3 text-text hover:text-danger"
                       aria-label={`Buang ${debt.label}`}
                     >
                       <Trash2 size={14} />

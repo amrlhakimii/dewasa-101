@@ -119,7 +119,7 @@ export function GoalSimulator() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
-        <div className="flex gap-1.5 rounded-full border border-border bg-surface-muted p-1">
+        <div className="flex gap-1 rounded-xl bg-bg p-1">
           {(Object.keys(KIND_META) as ScenarioKind[]).map((k) => {
             const Icon = KIND_META[k].icon;
             const active = kind === k;
@@ -129,10 +129,8 @@ export function GoalSimulator() {
                 type="button"
                 onClick={() => setKind(k)}
                 className={cn(
-                  'flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-sm font-semibold transition-all',
-                  active
-                    ? 'bg-gradient-to-r from-brand-500 to-brand-700 text-white shadow-glow'
-                    : 'text-text hover:text-text-h',
+                  'flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition-all sm:min-h-0',
+                  active ? 'bg-brand-600 text-white' : 'text-text-h/50 hover:text-text-h',
                 )}
               >
                 <Icon size={14} /> {KIND_META[k].label}
@@ -145,14 +143,14 @@ export function GoalSimulator() {
           <div className="rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm font-semibold text-text-h">Berapa harga kereta patut saya beli?</p>
-              <div className="flex gap-1 self-start rounded-full bg-surface-muted p-0.5 sm:shrink-0">
+              <div className="flex gap-1 self-start rounded-xl bg-bg p-1 sm:shrink-0">
                 {([20, 30] as const).map((pct) => (
                   <button
                     key={pct}
                     type="button"
                     onClick={() => setBudgetPercent(pct)}
                     className={cn(
-                      'rounded-full px-2.5 py-1 text-xs font-semibold transition-all',
+                      'min-h-11 cursor-pointer rounded-lg px-3 text-xs font-semibold transition-all sm:min-h-0 sm:py-1',
                       budgetPercent === pct ? 'bg-brand-600 text-white' : 'text-text hover:text-text-h',
                     )}
                   >
@@ -165,13 +163,13 @@ export function GoalSimulator() {
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="min-w-0 rounded-xl bg-surface-muted px-3 py-2">
                 <p className="text-xs text-text">Aturan mudah: 1x gaji bersih setahun</p>
-                <p className="break-words text-lg font-bold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
+                <p className="break-words font-display text-lg font-extrabold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
               </div>
               <div className="min-w-0 rounded-xl bg-surface-muted px-3 py-2">
                 <p className="text-xs text-text">
                   Ikut had ansuran {budgetPercent}% gaji (termasuk faedah, {interestRatePercent}%/{tenureYears}thn)
                 </p>
-                <p className="break-words text-lg font-bold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
+                <p className="break-words font-display text-lg font-extrabold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
               </div>
             </div>
             <p className="mt-2 text-xs text-text">
@@ -226,7 +224,7 @@ export function GoalSimulator() {
             <div className="col-span-2 flex flex-col gap-2 rounded-xl bg-surface-muted p-3">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-xs text-text">Anggaran cukai jalan (JPJ)</span>
-                <div className="flex gap-1 self-start rounded-full bg-surface p-0.5">
+                <div className="flex gap-1 self-start rounded-xl bg-bg p-1">
                   {(
                     [
                       { value: 'car' as const, icon: Car },
@@ -238,7 +236,7 @@ export function GoalSimulator() {
                       type="button"
                       onClick={() => setVehicleKind(value)}
                       className={cn(
-                        'flex h-6 w-6 items-center justify-center rounded-full',
+                        'flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg sm:h-7 sm:w-7',
                         vehicleKind === value ? 'bg-brand-600 text-white' : 'text-text',
                       )}
                     >
@@ -326,7 +324,7 @@ export function GoalSimulator() {
                       <button
                         type="button"
                         onClick={() => removeScenario(s.id)}
-                        className="text-text hover:text-danger"
+                        className="-m-3 cursor-pointer p-3 text-text hover:text-danger"
                         aria-label={`Buang ${s.label}`}
                       >
                         <Trash2 size={14} />

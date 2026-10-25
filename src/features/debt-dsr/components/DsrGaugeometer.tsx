@@ -54,7 +54,7 @@ export function DsrGaugeometer() {
             </RadialBarChart>
           </ResponsiveContainer>
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-text-h">{formatPercent(dsr)}</span>
+            <span className="font-display text-3xl font-extrabold tracking-tight text-text-h">{formatPercent(dsr)}</span>
             <span className="text-xs text-text">daripada gaji bersih</span>
           </div>
         </div>

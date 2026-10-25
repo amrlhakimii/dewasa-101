@@ -23,7 +23,7 @@ export function DeductionsBreakdownCard() {
       <CardContent className="flex flex-col gap-5">
         <div>
           <p className="text-sm text-text">Gaji bersih masuk akaun bank anda</p>
-          <p className="text-4xl font-bold tracking-tight text-accent">{formatCurrency(netMonthlyIncome)}</p>
+          <p className="font-display text-4xl font-extrabold tracking-tight text-brand-300">{formatCurrency(netMonthlyIncome)}</p>
           <p className="mt-1 text-xs text-text">
             daripada gaji kasar {formatCurrency(grossSalary + taxableAllowances)}
           </p>

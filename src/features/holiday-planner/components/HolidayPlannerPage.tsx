@@ -80,7 +80,7 @@ export function HolidayPlannerPage() {
                 {weekendType === 'sat-sun' ? 'Sabtu–Ahad' : 'Jumaat–Sabtu'}
               </span>
             </span>
-            <div className="flex shrink-0 gap-1 rounded-full bg-surface p-0.5">
+            <div className="flex shrink-0 gap-1 rounded-xl bg-bg p-1">
               {(
                 [
                   { value: 'sat-sun' as const, label: 'Sabtu–Ahad' },
@@ -92,7 +92,7 @@ export function HolidayPlannerPage() {
                   type="button"
                   onClick={() => setWeekendType(opt.value)}
                   className={cn(
-                    'rounded-full px-2.5 py-1 text-xs font-semibold transition-all',
+                    'min-h-11 cursor-pointer rounded-lg px-3 text-xs font-semibold transition-all sm:min-h-0 sm:py-1',
                     weekendType === opt.value ? 'bg-brand-600 text-white' : 'text-text hover:text-text-h',
                   )}
                 >
@@ -119,7 +119,7 @@ export function HolidayPlannerPage() {
               <button
                 type="button"
                 onClick={() => changeMonth(-1)}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-surface-muted"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-text hover:bg-white/5 hover:text-text-h sm:h-8 sm:w-8"
                 aria-label="Bulan sebelum"
               >
                 <ChevronLeft size={16} />
@@ -130,7 +130,7 @@ export function HolidayPlannerPage() {
               <button
                 type="button"
                 onClick={() => changeMonth(1)}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-surface-muted"
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-text hover:bg-white/5 hover:text-text-h sm:h-8 sm:w-8"
                 aria-label="Bulan seterusnya"
               >
                 <ChevronRight size={16} />

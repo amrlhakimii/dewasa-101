@@ -29,7 +29,7 @@ export function SignInPage() {
         paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom))',
       }}
     >
-      <div className="w-full max-w-sm animate-fade-up rounded-2xl border border-white/5 bg-surface/90 p-8 text-center shadow-elevated backdrop-blur-sm">
+      <div className="w-full max-w-sm animate-fade-up glass rounded-2xl p-8 text-center">
         <img src={logo} alt="Dewasa 101" className="mx-auto h-20 w-20 rounded-2xl shadow-glow" />
 
         <h1 className="font-display mt-5 text-2xl font-extrabold tracking-tight">
@@ -41,7 +41,7 @@ export function SignInPage() {
           type="button"
           onClick={handleSignIn}
           disabled={signingIn}
-          className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-glow transition-all duration-150 active:scale-95 disabled:pointer-events-none disabled:opacity-60"
+          className="mt-8 flex min-h-11 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-neutral-800 shadow-glow transition-all duration-150 active:scale-95 disabled:pointer-events-none disabled:opacity-60"
         >
           <GoogleIcon />
           {signingIn ? 'Sedang log masuk…' : 'Teruskan dengan Google'}
@@ -49,7 +49,7 @@ export function SignInPage() {
 
         {error && <p className="mt-3 text-sm text-danger">{error}</p>}
 
-        <div className="mt-6 flex items-start gap-2 rounded-xl bg-surface-muted px-3 py-2.5 text-left">
+        <div className="mt-6 flex items-start gap-2 rounded-xl bg-bg px-3 py-2.5 text-left">
           <ShieldCheck size={16} className="mt-0.5 shrink-0 text-brand-300" />
           <p className="text-xs text-text">
             Gaji, hutang, dan maklumat zakat anda adalah sulit untuk akaun anda sahaja — tidak dikongsi, tidak

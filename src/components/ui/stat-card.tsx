@@ -28,7 +28,7 @@ export function StatCard({ label, value, caption, icon: Icon, tone = 'default', 
   return (
     <div
       className={cn(
-        'rounded-2xl border border-white/5 bg-surface/90 p-4 shadow-card backdrop-blur-sm',
+        'glass rounded-2xl p-4',
         className,
       )}
     >
@@ -40,7 +40,7 @@ export function StatCard({ label, value, caption, icon: Icon, tone = 'default', 
           </span>
         )}
       </div>
-      <p className={cn('font-display mt-2 text-2xl font-bold tracking-tight', toneClasses[tone])}>{value}</p>
+      <p className={cn('font-display mt-2 text-2xl font-extrabold tracking-tight', toneClasses[tone])}>{value}</p>
       {caption && <p className="mt-1 text-xs text-text">{caption}</p>}
     </div>
   );

@@ -8,7 +8,7 @@ const toneClasses: Record<BadgeTone, string> = {
   success: 'bg-success-bg text-success',
   warning: 'bg-warning-bg text-warning',
   danger: 'bg-danger-bg text-danger',
-  neutral: 'bg-surface-muted text-text',
+  neutral: 'bg-white/10 text-text',
 };
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
@@ -19,7 +19,7 @@ export function Badge({ className, tone = 'neutral', ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+        'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
         toneClasses[tone],
         className,
       )}

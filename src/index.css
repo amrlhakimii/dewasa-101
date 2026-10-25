@@ -33,13 +33,17 @@
   --danger: #f87171;
   --danger-bg: rgba(248, 113, 113, 0.16);
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --glass: rgba(28, 28, 33, 0.6);
+  --glass-nav: rgba(18, 18, 20, 0.7);
+  --hairline: rgba(244, 244, 245, 0.07);
+
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
   --shadow-elevated: 0 10px 20px -3px rgba(0, 0, 0, 0.45), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 4px 14px rgba(190, 18, 60, 0.4);
   --shadow-glow-hover: 0 6px 20px rgba(190, 18, 60, 0.5);
 
-  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --font-display: 'Sora', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Syne', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 }
 
@@ -50,6 +54,8 @@
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
   --color-border: var(--border);
+  --color-glass: var(--glass);
+  --color-hairline: var(--hairline);
 
   --color-brand-50: var(--brand-50);
   --color-brand-100: var(--brand-100);
@@ -135,8 +141,8 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   color: var(--text-h);
   margin: 0;
 }
@@ -158,6 +164,39 @@ select {
   cursor: pointer;
 }
 
+/* Glass surface: translucent + blur + hairline + ambient shadow */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-card);
+}
+
+/* Floating nav: horizontal scroll with soft edge fade as the "more" hint */
+.nav-scroll {
+  scrollbar-width: none;
+  mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+}
+.nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.09) 37%, rgba(255, 255, 255, 0.04) 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.6s ease infinite;
+}
+
 /* Prevent iOS zoom on input focus */
 input,
 select,
@@ -175,14 +214,14 @@ textarea {
 .label-eyebrow {
   font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #71717a;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;

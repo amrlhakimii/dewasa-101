@@ -22,7 +22,7 @@ export function AuthButton() {
         type="button"
         onClick={() => signOutUser()}
         aria-label="Log keluar"
-        className="flex h-8 w-8 items-center justify-center rounded-full text-text hover:bg-surface-muted hover:text-danger"
+        className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-text hover:bg-white/5 hover:text-danger sm:h-8 sm:w-8"
       >
         <LogOut size={15} />
       </button>

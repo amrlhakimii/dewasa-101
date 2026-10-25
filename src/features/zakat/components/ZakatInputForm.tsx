@@ -32,7 +32,7 @@ export function ZakatInputForm() {
             id="zakatState"
             value={zakatState}
             onChange={(e) => setZakatState(e.target.value)}
-            className="w-full rounded-xl border border-border bg-surface-muted px-3 py-2.5 text-sm text-text-h outline-none transition-colors focus:border-accent focus:bg-surface"
+            className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm text-text-h outline-none transition-colors focus:border-brand-500"
           >
             {MALAYSIAN_STATES.map((state) => (
               <option key={state} value={state}>
@@ -69,7 +69,7 @@ export function ZakatInputForm() {
                 id="riceGrade"
                 value={riceGrade}
                 onChange={(e) => setRiceGrade(e.target.value as RiceGrade)}
-                className="w-full rounded-xl border border-border bg-surface-muted px-3 py-2.5 text-sm text-text-h outline-none transition-colors focus:border-accent focus:bg-surface"
+                className="w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm text-text-h outline-none transition-colors focus:border-brand-500"
               >
                 {RICE_GRADES.map((grade) => (
                   <option key={grade} value={grade}>

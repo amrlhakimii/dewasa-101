@@ -18,15 +18,17 @@ export function OnboardingModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex items-end justify-center md:items-center md:p-6"
       style={{
+        background: 'rgba(10,10,12,0.6)',
+        backdropFilter: 'blur(6px)',
         paddingTop: 'max(1rem, env(safe-area-inset-top))',
         paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
       }}
     >
-      <div className="w-full max-w-sm animate-fade-up rounded-2xl border border-white/5 bg-surface p-6 text-center shadow-elevated">
+      <div className="w-full animate-modal-in rounded-t-[20px] border border-accent-border/20 bg-surface p-6 text-center shadow-elevated md:max-w-sm md:rounded-[20px]">
         <img src={logo} alt="" className="mx-auto h-16 w-16 rounded-2xl shadow-glow" />
-        <h2 className="font-display mt-4 text-xl font-bold text-text-h">Selamat datang!</h2>
+        <h2 className="font-display mt-4 text-xl font-extrabold tracking-tight text-text-h">Selamat datang!</h2>
         <p className="mt-1 text-sm text-text">
           Untuk mula, berapa gaji pokok bulanan anda? Anda boleh kemaskini semua butiran lain (elaun, hutang, zakat)
           bila-bila masa di halaman masing-masing.

@@ -53,7 +53,7 @@ export function TaxBreakdownCard() {
 
         <div className="mt-4 rounded-xl bg-surface-muted px-3 py-2">
           <p className="text-sm text-text">Cukai perlu dibayar setahun</p>
-          <p className="text-2xl font-bold text-text-h">{formatCurrency(taxState.finalTaxPayable)}</p>
+          <p className="font-display text-2xl font-extrabold tracking-tight text-text-h">{formatCurrency(taxState.finalTaxPayable)}</p>
         </div>
 
         <SourceNote label="Lembaga Hasil Dalam Negeri (LHDN) — Kadar Cukai" href={DATA_SOURCES.LHDN_TAX_RATE} />

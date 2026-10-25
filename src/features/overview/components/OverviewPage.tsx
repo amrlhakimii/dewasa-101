@@ -60,12 +60,13 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
     <div className="flex flex-col gap-5">
       {/* Hero */}
       <Card className="overflow-hidden">
-        <div className="bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white">
-          <p className="label-eyebrow text-brand-100">Gaji bersih bulan ini</p>
-          <p className="font-display mt-1 text-4xl font-extrabold tracking-tight sm:text-5xl">
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white sm:p-8">
+          <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-300/20 blur-3xl" />
+          <p className="label-eyebrow relative text-brand-100">Gaji bersih bulan ini</p>
+          <p className="font-display relative mt-1 text-4xl font-extrabold tracking-tight sm:text-5xl">
             {formatCurrency(netMonthlyIncome)}
           </p>
-          <p className="mt-2 text-sm text-brand-50/90">
+          <p className="relative mt-2 text-sm text-brand-50/90">
             {formatPercent(takeHomePercent)} daripada gaji kasar {formatCurrency(monthlyGross)} masuk akaun bank
             anda
           </p>
@@ -156,7 +157,7 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
                 key={tab}
                 type="button"
                 onClick={() => onNavigate(tab)}
-                className="flex min-w-0 flex-col items-start gap-2 rounded-xl border border-border bg-surface-muted px-4 py-3 text-left transition-colors hover:bg-white/5"
+                className="flex min-w-0 cursor-pointer flex-col items-start gap-2 rounded-xl border border-hairline bg-bg/60 px-4 py-3 text-left transition-all hover:border-brand-500/40 hover:bg-brand-500/10 active:scale-95"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand-500/15 text-brand-300">
                   <Icon size={16} />

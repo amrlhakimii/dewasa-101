@@ -25,7 +25,7 @@ export function TaxReliefChecklist() {
           return (
             <label
               key={relief.id}
-              className="flex cursor-pointer items-start gap-3 rounded-xl border border-border px-3 py-2 text-sm hover:bg-surface-muted"
+              className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline px-3 py-2.5 text-sm transition-colors hover:border-brand-500/40 hover:bg-brand-500/5"
             >
               <input
                 type="checkbox"

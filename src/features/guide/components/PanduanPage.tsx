@@ -1,5 +1,7 @@
+import { ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Label } from '@/components/ui/input';
 import { NumberField } from '@/components/ui/number-field';
 import { SourceNote } from '@/components/ui/source-note';
@@ -90,11 +92,11 @@ export function PanduanPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-xl bg-surface-muted px-3 py-2">
                     <p className="text-xs text-text">Sasaran minimum (3 bulan)</p>
-                    <p className="text-lg font-bold text-text-h">{formatCurrency(emergencyFund.threeMonths)}</p>
+                    <p className="font-display text-lg font-extrabold text-text-h">{formatCurrency(emergencyFund.threeMonths)}</p>
                   </div>
                   <div className="rounded-xl bg-surface-muted px-3 py-2">
                     <p className="text-xs text-text">Sasaran selesa (6 bulan)</p>
-                    <p className="text-lg font-bold text-text-h">{formatCurrency(emergencyFund.sixMonths)}</p>
+                    <p className="font-display text-lg font-extrabold text-text-h">{formatCurrency(emergencyFund.sixMonths)}</p>
                   </div>
                 </div>
 
@@ -111,9 +113,11 @@ export function PanduanPage() {
                 </div>
               </>
             ) : (
-              <p className="rounded-xl border border-dashed border-border px-3 py-4 text-center text-sm text-text">
-                Isi perbelanjaan penting bulanan di atas untuk lihat sasaran dana kecemasan anda.
-              </p>
+              <EmptyState
+                icon={ShieldCheck}
+                title="Dana kecemasan belum dikira"
+                description="Isi perbelanjaan penting bulanan di atas untuk lihat sasaran anda."
+              />
             )}
           </CardContent>
         </Card>
@@ -126,7 +130,7 @@ export function PanduanPage() {
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {PAYSLIP_GLOSSARY.map((entry) => (
-            <div key={entry.term} className="rounded-xl border border-border px-3 py-2.5">
+            <div key={entry.term} className="rounded-xl border border-hairline bg-bg/50 px-3 py-2.5 transition-colors hover:border-brand-500/30">
               <p className="text-sm font-semibold text-text-h">{entry.term}</p>
               <p className="mt-1 text-xs text-text">{entry.explanation}</p>
             </div>
@@ -141,7 +145,7 @@ export function PanduanPage() {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           {CREDIT_GLOSSARY.map((entry) => (
-            <div key={entry.term} className="rounded-xl border border-border px-3 py-2.5">
+            <div key={entry.term} className="rounded-xl border border-hairline bg-bg/50 px-3 py-2.5 transition-colors hover:border-brand-500/30">
               <p className="text-sm font-semibold text-text-h">{entry.term}</p>
               <p className="mt-1 text-xs text-text">{entry.explanation}</p>
             </div>

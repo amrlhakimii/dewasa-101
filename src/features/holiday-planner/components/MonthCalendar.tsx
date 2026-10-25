@@ -23,7 +23,7 @@ export function MonthCalendar({ year, month, weekendType, bookedDates, onToggleB
 
   return (
     <div>
-      <p className="font-display mb-2 text-sm font-bold text-text-h">
+      <p className="font-display mb-2 text-sm font-extrabold tracking-tight text-text-h">
         {MONTH_NAMES_MY[month]} {year}
       </p>
       <div className="grid grid-cols-7 gap-1 text-center text-xs text-text">
@@ -49,10 +49,10 @@ export function MonthCalendar({ year, month, weekendType, bookedDates, onToggleB
               onClick={() => onToggleBooked(iso)}
               title={holidayName ?? undefined}
               className={cn(
-                'flex aspect-square flex-col items-center justify-center rounded-lg text-xs transition-colors',
+                'flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl text-xs transition-all active:scale-95 disabled:cursor-default',
                 holidayName && 'bg-brand-500/20 font-semibold text-brand-300',
                 !holidayName && weekend && 'bg-surface-muted text-text',
-                !holidayName && !weekend && !booked && 'text-text-h hover:bg-surface-muted',
+                !holidayName && !weekend && !booked && 'text-text-h hover:bg-brand-500/10',
                 booked && 'bg-success-bg font-semibold text-success',
               )}
             >
