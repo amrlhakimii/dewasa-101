@@ -22,6 +22,7 @@ export function NumberField({ value, onValueChange, className, ...props }: Numbe
   return (
     <Input
       type="text"
+      placeholder="0"
       inputMode="decimal"
       className={className}
       value={text}

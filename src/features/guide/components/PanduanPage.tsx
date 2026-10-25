@@ -22,7 +22,7 @@ export function PanduanPage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Peraturan Belanjawan 50/30/20</CardTitle>
@@ -92,11 +92,11 @@ export function PanduanPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-xl bg-surface-muted px-3 py-2">
                     <p className="text-xs text-text">Sasaran minimum (3 bulan)</p>
-                    <p className="font-display text-lg font-extrabold text-text-h">{formatCurrency(emergencyFund.threeMonths)}</p>
+                    <p className="tabular-nums text-lg font-extrabold text-text-h">{formatCurrency(emergencyFund.threeMonths)}</p>
                   </div>
                   <div className="rounded-xl bg-surface-muted px-3 py-2">
                     <p className="text-xs text-text">Sasaran selesa (6 bulan)</p>
-                    <p className="font-display text-lg font-extrabold text-text-h">{formatCurrency(emergencyFund.sixMonths)}</p>
+                    <p className="tabular-nums text-lg font-extrabold text-text-h">{formatCurrency(emergencyFund.sixMonths)}</p>
                   </div>
                 </div>
 

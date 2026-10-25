@@ -35,7 +35,7 @@ export function RentVsBuySimulator() {
 
               <div className="rounded-2xl bg-surface-muted p-4">
                 <p className="text-sm text-text">Jumlah tunai diperlukan untuk berpindah masuk</p>
-                <p className="font-display text-3xl font-extrabold tracking-tight text-brand-300">{formatCurrency(rentCosts.totalCashRequired)}</p>
+                <p className="tabular-nums text-3xl font-extrabold tracking-tight text-brand-300">{formatCurrency(rentCosts.totalCashRequired)}</p>
               </div>
 
               <div className="flex flex-col gap-2 text-sm">
@@ -57,7 +57,7 @@ export function RentVsBuySimulator() {
 
               <div className="rounded-2xl bg-surface-muted p-4">
                 <p className="text-sm text-text">Jumlah tunai diperlukan untuk selesaikan pembelian</p>
-                <p className="font-display text-3xl font-extrabold tracking-tight text-brand-300">{formatCurrency(buyCosts.totalCashRequired)}</p>
+                <p className="tabular-nums text-3xl font-extrabold tracking-tight text-brand-300">{formatCurrency(buyCosts.totalCashRequired)}</p>
               </div>
 
               <div className="flex flex-col gap-2 text-sm">

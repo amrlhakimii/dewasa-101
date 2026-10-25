@@ -87,8 +87,7 @@ function App() {
       {!hasOnboarded && <OnboardingModal />}
       <Tabs value={tab} onValueChange={handleTabChange}>
         <div className="mb-6 animate-fade-up">
-          <p className="label-eyebrow">Dewasa 101</p>
-          <h2 className="font-display mt-1 text-2xl font-extrabold tracking-tight md:text-3xl">{activeItem.label}</h2>
+          <h2 className="font-display text-2xl font-extrabold tracking-tight md:text-3xl">{activeItem.label}</h2>
         </div>
 
         <nav

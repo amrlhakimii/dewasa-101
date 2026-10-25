@@ -40,7 +40,7 @@ export function StatCard({ label, value, caption, icon: Icon, tone = 'default', 
           </span>
         )}
       </div>
-      <p className={cn('font-display mt-2 text-2xl font-extrabold tracking-tight', toneClasses[tone])}>{value}</p>
+      <p className={cn('tabular-nums mt-2 text-xl font-extrabold tracking-tight sm:text-2xl', toneClasses[tone])}>{value}</p>
       {caption && <p className="mt-1 text-xs text-text">{caption}</p>}
     </div>
   );

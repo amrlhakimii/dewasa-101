@@ -1,4 +1,4 @@
-import { MONTH_NAMES_MY, WEEKDAY_NAMES_MY } from '@/features/holiday-planner/data';
+import { WEEKDAY_NAMES_MY } from '@/features/holiday-planner/data';
 import { getHolidayMap, isWeekend, toIsoDate, type WeekendType } from '@/features/holiday-planner/logic';
 import { cn } from '@/lib/utils';
 
@@ -23,9 +23,6 @@ export function MonthCalendar({ year, month, weekendType, bookedDates, onToggleB
 
   return (
     <div>
-      <p className="font-display mb-2 text-sm font-extrabold tracking-tight text-text-h">
-        {MONTH_NAMES_MY[month]} {year}
-      </p>
       <div className="grid grid-cols-7 gap-1 text-center text-xs text-text">
         {WEEKDAY_NAMES_MY.map((d) => (
           <div key={d} className="pb-1 font-semibold">
@@ -49,7 +46,7 @@ export function MonthCalendar({ year, month, weekendType, bookedDates, onToggleB
               onClick={() => onToggleBooked(iso)}
               title={holidayName ?? undefined}
               className={cn(
-                'flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl text-xs transition-all active:scale-95 disabled:cursor-default',
+                'flex h-11 cursor-pointer flex-col items-center justify-center rounded-xl text-xs transition-all active:scale-95 sm:h-12 disabled:cursor-default',
                 holidayName && 'bg-brand-500/20 font-semibold text-brand-300',
                 !holidayName && weekend && 'bg-surface-muted text-text',
                 !holidayName && !weekend && !booked && 'text-text-h hover:bg-brand-500/10',

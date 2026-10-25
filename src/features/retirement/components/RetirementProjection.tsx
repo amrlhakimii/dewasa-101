@@ -1,4 +1,5 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { axisTick, chartTooltipProps, gridProps } from '@/components/ui/chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/input';
 import { NumberField } from '@/components/ui/number-field';
@@ -7,7 +8,7 @@ import { DATA_SOURCES } from '@/config/statutory';
 import { projectRetirementBalance } from '@/features/retirement/logic';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
 import { useFinanceStore } from '@/stores/useFinanceStore';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCompactNumber, formatCurrency } from '@/utils/formatters';
 
 export function RetirementProjection() {
   const { deductions } = useDerivedFinance();
@@ -78,38 +79,47 @@ export function RetirementProjection() {
             style={{ background: 'radial-gradient(circle at 100% 0%, rgba(190,18,60,0.26), rgba(18,18,20,0.5) 60%)' }}
           >
             <p className="label-eyebrow text-brand-300">Anggaran baki semasa bersara</p>
-            <p className="font-display mt-1 text-3xl font-extrabold tracking-tight text-text-h sm:text-4xl">
+            <p className="tabular-nums mt-1 text-3xl font-extrabold tracking-tight text-text-h sm:text-4xl">
               {formatCurrency(result.finalBalance)}
             </p>
           </div>
 
           <div className="mt-4 h-56 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={result.points} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
+              <AreaChart data={result.points} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="kwspFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--color-brand-500)" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="var(--color-brand-500)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#e11d48" stopOpacity={0.45} />
+                    <stop offset="100%" stopColor="#e11d48" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="kwspStroke" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#fda4af" />
+                    <stop offset="100%" stopColor="#e11d48" />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-                <XAxis dataKey="age" tick={{ fontSize: 11, fill: 'var(--color-text)' }} />
+                <CartesianGrid {...gridProps} />
+                <XAxis dataKey="age" tick={axisTick} axisLine={false} tickLine={false} minTickGap={16} />
                 <YAxis
-                  tick={{ fontSize: 11, fill: 'var(--color-text)' }}
-                  width={70}
-                  tickFormatter={(v) => formatCurrency(v)}
+                  tick={axisTick}
+                  width={60}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => `RM${formatCompactNumber(v)}`}
                 />
                 <Tooltip
                   formatter={(value) => formatCurrency(Number(value))}
                   labelFormatter={(age) => `Umur ${age}`}
-                  contentStyle={{
-                    background: 'var(--color-surface)',
-                    border: '1px solid var(--color-border)',
-                    borderRadius: 8,
-                    fontSize: 12,
-                  }}
+                  {...chartTooltipProps}
+                  cursor={{ stroke: 'rgba(225, 29, 72, 0.4)', strokeDasharray: '4 4' }}
                 />
-                <Area type="monotone" dataKey="balance" stroke="var(--color-brand-500)" fill="url(#kwspFill)" strokeWidth={2} />
+                <Area
+                  type="monotone"
+                  dataKey="balance"
+                  stroke="url(#kwspStroke)"
+                  fill="url(#kwspFill)"
+                  strokeWidth={2.5}
+                  activeDot={{ r: 5, fill: '#e11d48', stroke: '#f4f4f5', strokeWidth: 2 }}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>

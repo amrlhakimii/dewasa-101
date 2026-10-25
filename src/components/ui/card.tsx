@@ -18,7 +18,7 @@ export function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElemen
 }
 
 export function CardTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('font-display text-sm font-extrabold uppercase tracking-widest text-text-h/80', className)} {...props} />;
+  return <h3 className={cn('text-xs font-semibold uppercase tracking-widest text-text-h/70', className)} {...props} />;
 }
 
 export function CardDescription({ className, ...props }: HTMLAttributes<HTMLParagraphElement>) {

@@ -1,10 +1,11 @@
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { axisTick, chartTooltipProps, gridProps } from '@/components/ui/chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SourceNote } from '@/components/ui/source-note';
 import { DATA_SOURCES } from '@/config/statutory';
 import { calculateLHDNTax } from '@/features/tax/logic';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
-import { formatCurrency } from '@/utils/formatters';
+import { formatCompactNumber, formatCurrency } from '@/utils/formatters';
 
 export function TaxBreakdownCard() {
   const { annualIncome, taxState } = useDerivedFinance();
@@ -12,9 +13,9 @@ export function TaxBreakdownCard() {
   const taxBeforeRelief = calculateLHDNTax(annualIncome, 0);
 
   const chartData = [
-    { name: 'Tiada\npelepasan', value: taxBeforeRelief, fill: 'var(--color-text)' },
-    { name: 'Dengan\npelepasan', value: taxState.baseTaxPayable, fill: 'var(--color-accent)' },
-    { name: 'Cukai akhir\n(selepas rebat)', value: taxState.finalTaxPayable, fill: 'var(--color-danger)' },
+    { name: 'Asal', value: taxBeforeRelief, fill: '#a1a1aa' },
+    { name: 'Pelepasan', value: taxState.baseTaxPayable, fill: '#e11d48' },
+    { name: 'Akhir', value: taxState.finalTaxPayable, fill: '#fda4af' },
   ];
 
   return (
@@ -29,23 +30,35 @@ export function TaxBreakdownCard() {
       <CardContent>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'var(--color-text)' }} interval={0} />
-              <YAxis tick={{ fontSize: 11, fill: 'var(--color-text)' }} width={70} tickFormatter={(v) => formatCurrency(v)} />
-              <Tooltip
-                formatter={(value) => formatCurrency(Number(value))}
-                contentStyle={{
-                  background: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: 8,
-                  fontSize: 12,
-                }}
-              />
-              <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                {chartData.map((entry) => (
-                  <Cell key={entry.name} fill={entry.fill} />
+            <BarChart data={chartData} margin={{ top: 24, right: 8, left: 0, bottom: 0 }}>
+              <defs>
+                {chartData.map((entry, i) => (
+                  <linearGradient key={entry.name} id={`taxBar${i}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={entry.fill} stopOpacity={1} />
+                    <stop offset="100%" stopColor={entry.fill} stopOpacity={0.45} />
+                  </linearGradient>
                 ))}
+              </defs>
+              <CartesianGrid {...gridProps} />
+              <XAxis dataKey="name" tick={axisTick} interval={0} axisLine={false} tickLine={false} />
+              <YAxis
+                tick={axisTick}
+                width={60}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={(v) => `RM${formatCompactNumber(v)}`}
+              />
+              <Tooltip formatter={(value) => formatCurrency(Number(value))} {...chartTooltipProps} />
+              <Bar dataKey="value" radius={[10, 10, 0, 0]} maxBarSize={64}>
+                {chartData.map((entry, i) => (
+                  <Cell key={entry.name} fill={`url(#taxBar${i})`} />
+                ))}
+                <LabelList
+                  dataKey="value"
+                  position="top"
+                  formatter={(v) => `RM${formatCompactNumber(Number(v))}`}
+                  style={{ fill: '#f4f4f5', fontSize: 11, fontWeight: 600 }}
+                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>
@@ -53,7 +66,7 @@ export function TaxBreakdownCard() {
 
         <div className="mt-4 rounded-xl bg-surface-muted px-3 py-2">
           <p className="text-sm text-text">Cukai perlu dibayar setahun</p>
-          <p className="font-display text-2xl font-extrabold tracking-tight text-text-h">{formatCurrency(taxState.finalTaxPayable)}</p>
+          <p className="tabular-nums text-2xl font-extrabold tracking-tight text-text-h">{formatCurrency(taxState.finalTaxPayable)}</p>
         </div>
 
         <SourceNote label="Lembaga Hasil Dalam Negeri (LHDN) — Kadar Cukai" href={DATA_SOURCES.LHDN_TAX_RATE} />

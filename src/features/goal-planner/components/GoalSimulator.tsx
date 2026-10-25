@@ -163,13 +163,13 @@ export function GoalSimulator() {
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="min-w-0 rounded-xl bg-surface-muted px-3 py-2">
                 <p className="text-xs text-text">Aturan mudah: 1x gaji bersih setahun</p>
-                <p className="break-words font-display text-lg font-extrabold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
+                <p className="break-words tabular-nums text-lg font-extrabold text-text-h">{formatCurrency(affordability.priceByAnnualSalary)}</p>
               </div>
               <div className="min-w-0 rounded-xl bg-surface-muted px-3 py-2">
                 <p className="text-xs text-text">
                   Ikut had ansuran {budgetPercent}% gaji (termasuk faedah, {interestRatePercent}%/{tenureYears}thn)
                 </p>
-                <p className="break-words font-display text-lg font-extrabold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
+                <p className="break-words tabular-nums text-lg font-extrabold text-text-h">{formatCurrency(affordability.priceByInstalmentBudget)}</p>
               </div>
             </div>
             <p className="mt-2 text-xs text-text">
@@ -217,11 +217,11 @@ export function GoalSimulator() {
               <NumberField id="carTenure" value={tenureYears} onValueChange={setTenureYears} />
             </div>
 
-            <div className="col-span-2 mt-1 border-t border-border pt-3">
+            <div className="mt-1 sm:col-span-2 border-t border-border pt-3">
               <p className="label-eyebrow">Kos operasi</p>
             </div>
 
-            <div className="col-span-2 flex flex-col gap-2 rounded-xl bg-surface-muted p-3">
+            <div className="flex flex-col gap-2 rounded-xl bg-surface-muted p-3 sm:col-span-2">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-xs text-text">Anggaran cukai jalan (JPJ)</span>
                 <div className="flex gap-1 self-start rounded-xl bg-bg p-1">

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 type BadgeTone = 'accent' | 'success' | 'warning' | 'danger' | 'neutral';
 
 const toneClasses: Record<BadgeTone, string> = {
-  accent: 'bg-accent-bg text-accent',
+  accent: 'bg-accent-bg text-brand-300',
   success: 'bg-success-bg text-success',
   warning: 'bg-warning-bg text-warning',
   danger: 'bg-danger-bg text-danger',

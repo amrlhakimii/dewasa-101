@@ -19,7 +19,7 @@ export function ZakatBreakdownCard() {
       <CardContent className="flex flex-col gap-4">
         <div className="rounded-xl bg-surface-muted px-4 py-3">
           <p className="text-sm text-text">Jumlah zakat tahunan</p>
-          <p className="font-display text-3xl font-extrabold tracking-tight text-brand-300">{formatCurrency(totalZakat)}</p>
+          <p className="tabular-nums text-3xl font-extrabold tracking-tight text-brand-300">{formatCurrency(totalZakat)}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-sm">

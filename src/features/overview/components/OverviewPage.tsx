@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
+import { chartTooltipProps } from '@/components/ui/chart';
 import { StatCard } from '@/components/ui/stat-card';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
 import { useFinanceStore } from '@/stores/useFinanceStore';
@@ -52,11 +53,11 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
     {
       name: 'Gaji bersih',
       value: Math.max(0, monthlyGross - deductions.epfEmployee - deductions.socso - deductions.eis - monthlyPcb),
-      fill: 'var(--color-brand-600)',
+      fill: 'var(--color-brand-500)',
     },
     { name: 'KWSP', value: deductions.epfEmployee, fill: 'var(--color-brand-300)' },
     { name: 'PERKESO + SIP', value: deductions.socso + deductions.eis, fill: 'var(--color-warning)' },
-    { name: 'Cukai (PCB)', value: monthlyPcb, fill: 'var(--color-danger)' },
+    { name: 'Cukai (PCB)', value: monthlyPcb, fill: '#a1a1aa' },
   ].filter((slice) => slice.value > 0);
 
   return (
@@ -77,7 +78,7 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
               <span className="h-1.5 w-1.5 rounded-full bg-brand-500" style={{ boxShadow: '0 0 8px rgba(225,29,72,0.8)' }} />
               Gaji bersih bulan ini
             </p>
-            <p className="font-display mt-2 text-4xl font-extrabold tracking-tight text-text-h sm:text-5xl">
+            <p className="tabular-nums mt-2 text-4xl font-extrabold tracking-tight text-text-h sm:text-5xl">
               {formatCurrency(netMonthlyIncome)}
             </p>
             <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
@@ -138,56 +139,75 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
         />
       </div>
 
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
       {/* Breakdown donut */}
-      <Card>
+      <Card className="flex flex-col lg:col-span-3">
         <CardHeader>
           <CardTitle>Ke mana perginya gaji anda</CardTitle>
           <CardDescription>Gaji kasar bulanan, mengikut destinasi.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <div className="h-52 w-52 shrink-0">
+        <CardContent className="flex flex-1 items-center">
+          <div className="flex w-full flex-col items-center gap-6 sm:flex-row">
+            <div className="relative h-52 w-52 shrink-0">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={breakdown} dataKey="value" nameKey="name" innerRadius={58} outerRadius={84} paddingAngle={2}>
+                  <Pie
+                    data={breakdown}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={66}
+                    outerRadius={92}
+                    paddingAngle={3}
+                    cornerRadius={6}
+                    startAngle={90}
+                    endAngle={-270}
+                    stroke="none"
+                  >
                     {breakdown.map((slice) => (
-                      <Cell key={slice.name} fill={slice.fill} stroke="none" />
+                      <Cell key={slice.name} fill={slice.fill} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    formatter={(value) => formatCurrency(Number(value))}
-                    contentStyle={{
-                      background: 'var(--color-surface)',
-                      border: '1px solid var(--color-border)',
-                      borderRadius: 12,
-                      fontSize: 12,
-                    }}
-                  />
+                  <Tooltip formatter={(value) => formatCurrency(Number(value))} {...chartTooltipProps} />
                 </PieChart>
               </ResponsiveContainer>
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                <span className="tabular-nums text-2xl font-extrabold tracking-tight text-text-h">
+                  {formatPercent(takeHomePercent, 0)}
+                </span>
+                <span className="label-eyebrow">masuk bank</span>
+              </div>
             </div>
-            <div className="flex w-full flex-col gap-2">
-              {breakdown.map((slice) => (
-                <div key={slice.name} className="flex items-center justify-between text-sm">
-                  <span className="flex items-center gap-2 text-text">
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ background: slice.fill }} />
-                    {slice.name}
-                  </span>
-                  <span className="font-semibold text-text-h">{formatCurrency(slice.value)}</span>
-                </div>
-              ))}
+            <div className="flex w-full flex-col gap-3">
+              {breakdown.map((slice) => {
+                const share = monthlyGross > 0 ? (slice.value / monthlyGross) * 100 : 0;
+                return (
+                  <div key={slice.name}>
+                    <div className="flex items-center justify-between gap-3 text-sm">
+                      <span className="flex items-center gap-2 text-text">
+                        <span className="h-2.5 w-2.5 rounded-full" style={{ background: slice.fill }} />
+                        {slice.name}
+                        <span className="text-xs text-text/60">{formatPercent(share, 0)}</span>
+                      </span>
+                      <span className="tabular-nums font-semibold text-text-h">{formatCurrency(slice.value)}</span>
+                    </div>
+                    <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-white/5">
+                      <div className="h-full rounded-full" style={{ width: `${share}%`, background: slice.fill }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Quick actions */}
-      <Card>
+      <Card className="lg:col-span-2">
         <CardHeader>
           <CardTitle>Nak buat apa hari ini?</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3">
             {QUICK_ACTIONS.map(({ question, tab, icon: Icon }) => (
               <button
                 key={tab}
@@ -204,6 +224,7 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

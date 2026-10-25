@@ -25,7 +25,7 @@ export function TaxReliefChecklist() {
           return (
             <label
               key={relief.id}
-              className="flex cursor-pointer items-start gap-3 rounded-xl border border-hairline px-3 py-2.5 text-sm transition-colors hover:border-brand-500/40 hover:bg-brand-500/5"
+              className="flex cursor-pointer flex-wrap items-start gap-x-3 gap-y-1 rounded-xl border border-hairline px-3 py-2.5 text-sm transition-colors hover:border-brand-500/40 hover:bg-brand-500/5"
             >
               <input
                 type="checkbox"
@@ -34,7 +34,7 @@ export function TaxReliefChecklist() {
                 className="mt-0.5 h-4 w-4 accent-[var(--accent)]"
               />
               <span className="flex-1 text-text">{relief.label}</span>
-              <span className="font-medium text-text-h">sehingga {formatCurrency(relief.max)}</span>
+              <span className="w-full pl-7 text-xs font-medium text-text-h sm:w-auto sm:pl-0 sm:text-sm">sehingga {formatCurrency(relief.max)}</span>
             </label>
           );
         })}
