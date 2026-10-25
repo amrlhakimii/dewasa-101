@@ -10,6 +10,9 @@ import {
 } from 'lucide-react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { StatCard } from '@/components/ui/stat-card';
 import { useDerivedFinance } from '@/stores/useDerivedFinance';
 import { useFinanceStore } from '@/stores/useFinanceStore';
@@ -59,18 +62,51 @@ export function OverviewPage({ onNavigate }: OverviewPageProps) {
   return (
     <div className="flex flex-col gap-5">
       {/* Hero */}
-      <Card className="overflow-hidden">
-        <div className="relative overflow-hidden bg-gradient-to-br from-brand-600 to-brand-800 p-6 text-white sm:p-8">
-          <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-300/20 blur-3xl" />
-          <p className="label-eyebrow relative text-brand-100">Gaji bersih bulan ini</p>
-          <p className="font-display relative mt-1 text-4xl font-extrabold tracking-tight sm:text-5xl">
-            {formatCurrency(netMonthlyIncome)}
-          </p>
-          <p className="relative mt-2 text-sm text-brand-50/90">
-            {formatPercent(takeHomePercent)} daripada gaji kasar {formatCurrency(monthlyGross)} masuk akaun bank
-            anda
-          </p>
-        </div>
+      <Card className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at 100% 0%, rgba(190,18,60,0.28), transparent 55%), radial-gradient(circle at 0% 100%, rgba(190,18,60,0.10), transparent 50%)',
+          }}
+        />
+        {monthlyGross > 0 ? (
+          <div className="relative p-6 sm:p-8">
+            <p className="label-eyebrow flex items-center gap-2 text-brand-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-500" style={{ boxShadow: '0 0 8px rgba(225,29,72,0.8)' }} />
+              Gaji bersih bulan ini
+            </p>
+            <p className="font-display mt-2 text-4xl font-extrabold tracking-tight text-text-h sm:text-5xl">
+              {formatCurrency(netMonthlyIncome)}
+            </p>
+            <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-700"
+                style={{ width: `${Math.min(100, takeHomePercent)}%`, boxShadow: '0 0 12px rgba(190,18,60,0.6)' }}
+              />
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
+              <Badge tone="accent">{formatPercent(takeHomePercent)}</Badge>
+              <span className="text-text">
+                daripada gaji kasar {formatCurrency(monthlyGross)} masuk akaun bank anda
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="relative p-6 sm:p-8">
+            <EmptyState
+              icon={Wallet}
+              title="Gaji bersih anda belum dikira"
+              description="Masukkan gaji pokok untuk lihat berapa sebenarnya masuk akaun bank selepas KWSP, PERKESO, SIP dan cukai."
+            />
+            <div className="flex justify-center">
+              <Button type="button" onClick={() => onNavigate('income')}>
+                Masukkan gaji
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
 
       {/* Stat grid */}

@@ -73,9 +73,12 @@ export function RetirementProjection() {
           <CardDescription>Andaian caruman &amp; dividen kekal sama sepanjang tempoh.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 p-5 text-white">
-            <p className="label-eyebrow text-brand-100">Anggaran baki semasa bersara</p>
-            <p className="font-display mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">
+          <div
+            className="rounded-2xl border border-hairline p-5"
+            style={{ background: 'radial-gradient(circle at 100% 0%, rgba(190,18,60,0.26), rgba(18,18,20,0.5) 60%)' }}
+          >
+            <p className="label-eyebrow text-brand-300">Anggaran baki semasa bersara</p>
+            <p className="font-display mt-1 text-3xl font-extrabold tracking-tight text-text-h sm:text-4xl">
               {formatCurrency(result.finalBalance)}
             </p>
           </div>
